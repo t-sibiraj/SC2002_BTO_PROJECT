@@ -11,5 +11,5 @@ if [ $? -eq 0 ]; then
     cd out
     java MainApp
 else
-    echo "❌ Compilation failed. Fix the errors before running."
+    echo "Compilation failed. Fix the errors before running."
 fi
