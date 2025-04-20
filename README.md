@@ -7,7 +7,7 @@ javac -d out MainApp.java */*.java */*/*.java
 ```
 
 #### WE WILL BE SAVING ALL THE COMPILED CODE INSIDE THE OUT DIRECTORY
-#### SO CD TO THE DIR AFTER COMPILATION TO RUN THE PROGRAM
+##### So make ensure to cd to the out directory before running the program
 
 # If compilation succeeds run the following commands
 ```
