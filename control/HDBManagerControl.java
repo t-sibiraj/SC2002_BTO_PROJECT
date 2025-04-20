@@ -50,6 +50,10 @@
 
 package control;
 
+import enums.ApplicationStatus;
+import enums.RegistrationStatus;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import model.*;
 import repo.*;
@@ -73,81 +77,367 @@ public class HDBManagerControl {
         officerRepo = oRepo;
     }
 
-    private static final Scanner sc = new Scanner(System.in);
-
     // 1. Create New Project
     public static void handleCreateProject(HDBManager manager) {
         // Prompt for input fields and create BTOProject
         // Enforce: no overlapping project periods for same manager
+        projectRepo.createProject(manager);
     }
 
     // 2. Edit Project
     public static void handleEditProject(HDBManager manager) {
         // Select from manager's projects
         // Update editable fields
+
+        Scanner sc = new Scanner(System.in);
+
+        List<BTOProject> projects = manager.getprojects();
+        manager.viewProjects();
+
+        System.out.print("Enter the number of the project you want to edit (0 to cancel): ");
+        int choice;
+        try {
+            choice = Integer.parseInt(sc.nextLine()) - 1;
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input.");
+            return;
+        }
+
+        if (choice == 0) {
+            System.out.println("Operation cancelled.");
+            return;
+        }
+
+        if (choice < 0 || choice >= projects.size()) {
+            System.out.println("Invalid project number.");
+            return;
+        }
+
+        BTOProject selected = projects.get(choice -1);
+        System.out.println("\nSelected project:");
+        System.out.println(selected);
+        
+        projectRepo.editProject(selected.getName());
     }
 
     // 3. Delete Project
     public static void handleDeleteProject(HDBManager manager) {
         // Select and remove project created by this manager
+        Scanner sc = new Scanner(System.in);
+
+        List<BTOProject> projects = manager.getprojects();
+        manager.viewProjects();
+
+        System.out.print("Enter the number of the project you want to delete (0 to cancel): ");
+        int choice;
+        try {
+            choice = Integer.parseInt(sc.nextLine()) - 1;
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input.");
+            return;
+        }
+
+        if (choice == 0) {
+            System.out.println("Operation cancelled.");
+            return;
+        }
+
+        if (choice < 0 || choice >= projects.size()) {
+            System.out.println("Invalid project number.");
+            return;
+        }
+
+        BTOProject selected = projects.get(choice -1);
+        System.out.println("\nSelected project:");
+        System.out.println(selected);
+        
+        projectRepo.deleteProject(selected.getName());
     }
 
     // 4. Toggle Visibility
     public static void toggleProjectVisibility(HDBManager manager) {
         // Toggle visibility for one of their projects
+        Scanner sc = new Scanner(System.in);
+
+        List<BTOProject> projects = manager.getprojects();
+        manager.viewProjects();
+
+        System.out.print("Enter the number of the project you want to toggle visibility (0 to cancel): ");
+        int choice;
+        try {
+            choice = Integer.parseInt(sc.nextLine()) - 1;
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input.");
+            return;
+        }
+
+        if (choice == 0) {
+            System.out.println("Operation cancelled.");
+            return;
+        }
+
+        if (choice < 0 || choice >= projects.size()) {
+            System.out.println("Invalid project number.");
+            return;
+        }
+
+        BTOProject selected = projects.get(choice -1);
+        selected.toggleVisibility();
+        System.out.println("\nUpdated project:");
+        System.out.println(selected);
     }
 
     // 5. View All Projects
     public static void viewAllProjects() {
         // List all projects regardless of visibility or owner
+        projectRepo.printAllProjects();
     }
 
     // 6. View Only My Projects
     public static void viewMyProjects(HDBManager manager) {
-        // Filter projectRepo by manager.getNric()
+        manager.viewProjects();
     }
 
     // 7. View Officer Registrations
     public static void viewOfficerRegistrations(HDBManager manager) {
         // Show all officer registrations related to manager's projects
+        for (BTOProject projects : manager.getprojects()){
+            projects.getOfficerRegistrations().toString();
+        }
     }
 
     // 8. Approve/Reject Officer Registration
     public static void handleUpdateRegistration(HDBManager manager) {
         // Approve or reject a registration
         // On approval, assign officer to project & decrease available officer slots
+
+        Scanner sc = new Scanner(System.in);
+        List<OfficerRegistration> registrations = new ArrayList<>();
+        
+        for (BTOProject projects : manager.getprojects()){
+            for (OfficerRegistration registration : projects.getOfficerRegistrations()){
+                if (registration.getStatus() == RegistrationStatus.PENDING)
+                    registrations.add(registration);
+            }
+        }
+
+        System.out.println("=== Pending Registrations ===");
+        for (int i = 0; i < registrations.size(); i++) {
+            System.out.println((i + 1) + ". " + registrations.toString());
+        }
+
+        System.out.print("Enter the number of the registration you want to approve/reject (0 to cancel): ");
+        int choice;
+        try {
+            choice = Integer.parseInt(sc.nextLine()) - 1;
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input.");
+            return;
+        }
+
+        if (choice == 0) {
+            System.out.println("Operation cancelled.");
+            return;
+        }
+
+        if (choice < 0 || choice >= registrations.size()) {
+            System.out.println("Invalid registration number.");
+            return;
+        }
+
+        OfficerRegistration selected = registrations.get(choice -1);
+        System.out.println("\nSelected registration:");
+        System.out.println(selected);
+        
+        System.out.print("Would you like to (A)pprove or (R)eject this registration? ");
+        String action = sc.nextLine().trim().toLowerCase();
+
+        switch (action) {
+            case "a" -> {
+                if (selected.getProject().getNoAvailableOffice()>0){
+                    manager.updateRegistration(true, selected);
+                    selected.getProject().decrementAvailableOffice();
+                }
+                else
+                    System.out.println("No office available, approval failed. ");
+            }
+
+            case "d" -> {
+                manager.updateRegistration(false, selected);
+            }
+
+            default -> System.out.println("Invalid choice. Operation cancelled.");
+        }
+
     }
 
     // 9. View Applications to My Project
     public static void viewApplications(HDBManager manager) {
         // List applications to manager's projects
+        List<BTOProject> projects = manager.getprojects();
+        if (projects == null){
+            System.out.println("No projects to view.");
+            return;
+        }
+
+        for (BTOProject project : projects){
+            project.getApplications().toString();
+        }
     }
 
     // 10. Approve/Reject Application
     public static void handleUpdateApplication(HDBManager manager) {
         // Approve/reject application based on flat supply
         // Update project flat counts
+        Scanner sc = new Scanner(System.in);
+        List<BTOProject> projects = manager.getprojects();
+        List<BTOApplication> applications = new ArrayList<>();
+
+        if (projects == null){
+            System.out.println("No projects available.");
+            return;
+        }
+
+        for (BTOProject project : projects){//view all projects
+            for (BTOApplication application : project.getApplications()){//for each project get all applications
+                if (application.getApplicationStatus() == ApplicationStatus.PENDING)//for each application check status is pending
+                    applications.add(application);//add pending applications to list
+            }
+        }
+
+        System.out.println("=== Pending Applications ===");
+        for (int i = 0; i < applications.size(); i++) {
+            System.out.println((i + 1) + ". " + applications.toString());
+        }
+
+        System.out.print("Enter the number of the application you want to approve/reject (0 to cancel): ");
+        int choice;
+        try {
+            choice = Integer.parseInt(sc.nextLine()) - 1;
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input.");
+            return;
+        }
+
+        if (choice == 0) {
+            System.out.println("Operation cancelled.");
+            return;
+        }
+
+        if (choice < 0 || choice >= applications.size()) {
+            System.out.println("Invalid application number.");
+            return;
+        }
+
+        BTOApplication selected = applications.get(choice -1);
+        System.out.println("\nSelected application:");
+        System.out.println(selected);
+        
+        System.out.print("Would you like to (A)pprove or (R)eject this application? ");
+        String action = sc.nextLine().trim().toLowerCase();
+
+        switch (action) {
+            case "a" -> {
+                if (selected.getProject().hasFlatAvailable(selected.getFlatType())){
+                    manager.updateApplication(true, selected);
+                    selected.getProject().decrementFlatCount(selected.getFlatType());
+                }
+                else
+                    System.out.println("No flats available, approval failed. ");
+            }
+
+            case "d" -> {
+                manager.updateApplication(false, selected);
+            }
+
+            default -> System.out.println("Invalid choice. Operation cancelled.");
+        }
     }
 
     // 11. Process Withdrawal Requests
     public static void handleProcessWithdrawal(HDBManager manager) {
         // Show withdrawal requests for their projects
         // Allow manager to approve/reject
+        manager.processWithdrawal();
     }
 
     // 12. View All Enquiries (all projects)
     public static void viewAllEnquiries() {
         // Show enquiries across all projects
+        for (BTOProject project : projectRepo.getProjects()){
+            for (Enquiry enquiry : project.getEnquiries()){
+                System.out.println(enquiry.toString());
+            }
+        }
     }
 
     // 13. Reply to Enquiries (My Project Only)
     public static void replyToEnquiries(HDBManager manager) {
         // Allow manager to reply only to enquiries on their own projects
+        List<BTOProject> projects = manager.getprojects();
+        List<Enquiry> enquiries = new ArrayList<>();
+        Scanner sc = new Scanner(System.in);
+
+        if (projects == null){
+            System.out.println("You are not managing any projects");
+            return;
+        }
+
+        for (BTOProject project : projects){//view all projects
+            for (Enquiry enquiry : project.getEnquiries()){//for each project get all enquiries
+                if (!enquiry.isReplied())//for each enquiry filter non replied enquiries
+                    enquiries.add(enquiry);//add enquiry to list
+            }
+        }
+
+        System.out.println("=== Pending Enquiries ===");
+        for (int i = 0; i < enquiries.size(); i++) {
+            System.out.println((i + 1) + ". " + enquiries.toString());
+        }
+
+        System.out.print("Enter the number of the enquiries you want to reply to (0 to cancel): ");
+        int choice;
+        try {
+            choice = Integer.parseInt(sc.nextLine()) - 1;
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input.");
+            return;
+        }
+
+        if (choice == 0) {
+            System.out.println("Operation cancelled.");
+            return;
+        }
+
+        if (choice < 0 || choice >= enquiries.size()) {
+            System.out.println("Invalid enquiry number.");
+            return;
+        }
+
+        Enquiry selected = enquiries.get(choice -1);
+        System.out.println("\nSelected enquiry:");
+        System.out.println(selected);
+
+        if (selected.isReplied()) {
+            System.out.println("This enquiry has already been replied to.");
+            return;
+        }
+
+        System.out.print("Enter your reply: ");
+        String reply = sc.nextLine().trim();
+
+        if (reply.isEmpty()) {
+            System.out.println("Reply cannot be empty.");
+            return;
+        }
+
+        manager.replyToEnquiry(selected, reply);
     }
 
     // 14. Generate Report (with filters)
     public static void generateReports(HDBManager manager) {
         // Generate and display applicant reports (e.g. filter by marital status, flat type, etc.)
+
     }
 
     // 15. Change Password

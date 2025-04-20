@@ -32,7 +32,7 @@ public class BTOProjectRepo {
     }
 
 
-    public void createProject(){
+    public void createProject(HDBManager manager){
         String neighborhood, projectName;
         int twoRoomNo, threeRoomNo, twoRoomPrice, threeRoomPrice, noAvailableOffice;
         LocalDate appOpenDate, appCloseDate;
@@ -65,8 +65,6 @@ public class BTOProjectRepo {
 
         System.out.print("Enter number of available HDB Officer Slots: ");
         noAvailableOffice = sc.nextInt();
-
-        HDBManager manager = HDBManager.createUser();
 
         System.out.print("Enter The Officer Names");
         String officerAssignedAsString = sc.nextLine().trim();
@@ -200,10 +198,10 @@ public class BTOProjectRepo {
         } while (choice != 9);
     }
 
-    /*
-     * removes project from list
-     * TODO check implementation, and check if this kind of data manipulation allowed
-     */
+    public void deleteProject(String projectName){
+        projects.removeIf(project -> project.getName().equals(projectName));
+    }
+
     public List<BTOProject> filterProject() {
         Scanner sc = new Scanner(System.in);
         List<BTOProject> filteredProjects = new ArrayList<>();

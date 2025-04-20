@@ -1,10 +1,15 @@
  package model;
- 
- public class HDBManager extends User{
+
+import enums.ApplicationStatus;
+import enums.RegistrationStatus;
+import java.util.ArrayList;
+import java.util.List;
+
+public class HDBManager extends User{
     // ======================
     // Fields
     // ======================
-    private BTOProject project;
+    private List<BTOProject> projects = new ArrayList<>();
 
     // ======================
     // Constructor
@@ -31,21 +36,33 @@
     // Getters
     // ======================
 
+    public List<BTOProject> getprojects() { return this.projects; }
+
     // ADD IF YOU NEED ANY
 
 
     // ======================
     // Setters
     // ======================
-    public void setProject(BTOProject p){
-        this.project = p;
+    public void addProject(BTOProject p){
+        projects.add(p);
     }
 
-    public void processWithdrawal(){//TODO implement application withdrawal
-        if (this.project!=null){
-            
+    public void processWithdrawal(){
+        if (this.projects!=null){
+            List<BTOApplication> applications;
+
+            for (BTOProject project : projects){//for each project in projects
+                applications= project.getApplications();//get project applications
+
+                for (BTOApplication application : applications){//for each application
+                    if(application.hasRequestedWithdraw())
+                        application.withdraw();
+                }
+            }    
         }
-            
+        else
+            System.out.println("No project to withdraw");       
     }
 
     // ======================
@@ -55,19 +72,46 @@
     /*
      * toggles project visibility
      */
-    public void toggleProjectVisibility(){
-        this.project.toggleVisibility();
+    public void toggleProjectVisibility(BTOProject p){
+        p.toggleVisibility();
     }
 
-    //TODO figure out registration
-    public void updateRegistration(boolean approved){
-
+    public void updateRegistration(boolean approved, OfficerRegistration r){
+        if(approved)
+            r.setStatus(RegistrationStatus.APPROVED);
+        else
+            r.setStatus(RegistrationStatus.REJECTED);
     }
 
-    public void updateApplication(boolean approved){
-
+    public void updateApplication(boolean approved, BTOApplication a){
+        if(approved)
+            a.setStatus(ApplicationStatus.SUCCESSFUL);
+        else
+            a.setStatus(ApplicationStatus.UNSUCCESSSFUL);
     }
 
+    public void viewProjects() {
+        if (projects.isEmpty()) {
+            System.out.println("You have not submitted any enquiries.");
+            return;
+        }
+
+        for (int i = 0; i < projects.size(); i++) {
+            System.out.println("[" + (i + 1) + "]\n" + projects.get(i).toString() + "\n");
+        }
+    }
+
+    /**
+     * View and reply to enquiries related to this managers's project
+     */
+    public void replyToEnquiry(Enquiry enquiry, String reply) {
+        if (projects != null && projects.contains(enquiry.getProject())) {
+            enquiry.setReply(reply);
+            System.out.println("Reply submitted.");
+        } else {
+            System.out.println("This enquiry does not belong to your managed projects.");
+        }
+    }
 
     // ======================
     // Factory Method

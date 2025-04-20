@@ -24,6 +24,8 @@ public class BTOApplication{
         this.flatType = flatType;
         this.status = ApplicationStatus.SUCCESSFUL;  //CHANGE IT BACK PENDING REMEMBER
         this.wantWithdraw = false;
+
+        this.applicant.setApplication(this);
     }
 
     // ======================
@@ -80,5 +82,21 @@ public class BTOApplication{
     // ======================
     public void createFlatBooking(FlatType flatType, BTOProject project) {
         this.flatBooking = new FlatBooking(flatType, project);  
+    }
+
+    @Override
+    public String toString() {
+        return """
+            Applicant Name      : %s
+            Project Name        : %s
+            Flat Type           : %s
+            Application Status  : %s
+            Withdrawal Status   : %s
+            
+            ------------------------------------------
+            """.formatted(
+                applicant.getName(), project.getName(), flatType.toString().toLowerCase(), 
+                status.toString().toLowerCase(), wantWithdraw ? "Submitted" : "None"
+            );
     }
 }

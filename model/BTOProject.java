@@ -226,6 +226,10 @@ public class BTOProject {
         System.out.println("Application added to project: " + this.name);
     }
 
+    //Decrement number of available offices
+    public void decrementAvailableOffice(){
+        this.noAvailableOffice--;
+    }
 
     // ======================
     // Factory Method
