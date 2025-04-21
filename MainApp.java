@@ -13,10 +13,10 @@ public class MainApp {
         HDBOfficerControl.init(applicantRepo, projectRepo, officerRepo);
         HDBManagerControl.init(applicantRepo, projectRepo, officerRepo);
 
-        applicantRepo.loadFromCSV("../data/ApplicantList.csv");
-        officerRepo.loadFromCSV("../data/OfficerList.csv");
-        managerRepo.loadFromCSV("../data/ManagerList.csv");
-        projectRepo.loadFromCSV("../data/ProjectList.csv", managerRepo, officerRepo);
+        applicantRepo.loadFromCSV("data\\ApplicantList.csv");
+        officerRepo.loadFromCSV("data\\OfficerList.csv");
+        managerRepo.loadFromCSV("data\\ManagerList.csv");
+        projectRepo.loadFromCSV("data\\ProjectList.csv", managerRepo, officerRepo);
 
         
         for (HDBOfficer officer : officerRepo.getAllOfficers()){

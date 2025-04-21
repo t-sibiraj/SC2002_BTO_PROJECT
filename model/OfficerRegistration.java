@@ -21,7 +21,7 @@ public class OfficerRegistration {
 
         this.officer = officer;
         this.project = project;
-        this.status = RegistrationStatus.APPROVED; // CHANGE THIS BACK TO PENDING REMEMBER
+        this.status = RegistrationStatus.PENDING; // CHANGE THIS BACK TO PENDING REMEMBER
 
         project.addRegistration(this); // automatically add to project
     }

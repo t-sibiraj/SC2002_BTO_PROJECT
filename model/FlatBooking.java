@@ -12,15 +12,18 @@ public class FlatBooking {
     private BTOProject project;       
     private LocalDateTime bookingDate;
     private boolean isResolved;       
+    private BTOApplication application;
 
     // ======================
     // Constructor
     // ======================
-    public FlatBooking(FlatType flatType, BTOProject project) {
+    public FlatBooking(FlatType flatType, BTOApplication application) {
         this.flatType = flatType;
-        this.project = project;
+        this.project = application.getProject();
         this.bookingDate = LocalDateTime.now();
         this.isResolved = false;
+        this.application = application;
+        project.addBooking(this);
     }
 
     // ======================
@@ -41,6 +44,10 @@ public class FlatBooking {
 
     public boolean isResolved() {
         return isResolved;
+    }
+
+    public BTOApplication getApplication(){
+        return application;
     }
 
     // ======================

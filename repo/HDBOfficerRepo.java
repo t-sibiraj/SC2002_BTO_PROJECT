@@ -44,7 +44,7 @@ public class HDBOfficerRepo implements IUserRepo {
                 return officer;
             }
         }
-        System.out.println("No officer with such NRIC found");
+        //System.out.println("No officer with such NRIC found"); Unsafe, shows up even if login fail
         return null;
     }
 

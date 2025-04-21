@@ -90,7 +90,7 @@ public class HDBOfficer extends Applicant {
         }
 
         assignedProject.decrementFlatCount(flatType);
-        app.createFlatBooking(flatType, assignedProject);
+        app.createFlatBooking(flatType);
         app.setStatus(ApplicationStatus.BOOKED);
         System.out.println("Flat booked successfully.");
     }

@@ -41,7 +41,7 @@ public class ApplicantRepo implements IUserRepo {
                 return applicant;
             }
         }
-        System.out.println("No applicant with such NRIC found");
+        //System.out.println("No applicant with such NRIC found"); Unsafe, shows up even if login fail
         return null;
     }
 

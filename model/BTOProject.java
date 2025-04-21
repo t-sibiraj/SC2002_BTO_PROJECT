@@ -29,6 +29,7 @@ public class BTOProject {
     private List<BTOApplication> applications;
     private List<Enquiry> enquiries;
     private List<OfficerRegistration> officerRegistrations;
+    private List<FlatBooking> bookings;
 
     // ======================
     // Constructor
@@ -49,11 +50,12 @@ public class BTOProject {
 
         this.hdbManager = hdbManager;
         this.hdbManagerName  = this.hdbManager.getName();
+        this.hdbManager.addProject(this);
 
         this.applications = new ArrayList<>();
         this.enquiries = new ArrayList<>();
         this.officerRegistrations = new ArrayList<>();
-
+        this.bookings = new ArrayList<>();
         // this.officerAssignedAsString = officerRegistrations.stream().map(reg -> reg.getOfficer().getName()).collect(Collectors.joining(","));
     }
 
@@ -121,6 +123,10 @@ public class BTOProject {
                 .map(r -> r.getOfficer().getName())
                 .distinct() //eliminate duplicate displyaing of offciers in csv
                 .collect(Collectors.joining(",")); 
+    }
+
+    public List<FlatBooking> getBookings(){
+        return bookings;
     }
 
     // ======================
@@ -226,6 +232,14 @@ public class BTOProject {
         System.out.println("Application added to project: " + this.name);
     }
 
+    //Decrement number of available offices
+    public void decrementAvailableOffice(){
+        this.noAvailableOffice--;
+    }
+
+    public void addBooking(FlatBooking booking){
+        this.bookings.add(booking);
+    }
 
     // ======================
     // Factory Method

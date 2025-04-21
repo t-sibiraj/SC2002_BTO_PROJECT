@@ -32,43 +32,44 @@ public class BTOProjectRepo {
     }
 
 
-    public void createProject(){
+    public void createProject(HDBManager manager){
         String neighborhood, projectName;
         int twoRoomNo, threeRoomNo, twoRoomPrice, threeRoomPrice, noAvailableOffice;
         LocalDate appOpenDate, appCloseDate;
         Scanner sc = new Scanner(System.in);
 
-        System.out.print("Please enter the project name:");
+        System.out.print("Please enter the project name: ");
         projectName = sc.nextLine().trim();
 
-        System.out.print("Please enter neighborhood:");
+        System.out.print("Please enter neighborhood: ");
         neighborhood = sc.nextLine().trim();
 
-        System.out.print("Enter number of two room flats");
+        System.out.print("Enter number of two room flats: ");
         twoRoomNo = sc.nextInt();
 
-        System.out.print("Enter number of three room flats");
+        System.out.print("Enter number of three room flats: ");
         threeRoomNo = sc.nextInt();
 
-        System.out.print("Enter price of two room flats");
+        System.out.print("Enter price of two room flats: ");
         twoRoomPrice = sc.nextInt();
 
-        System.out.print("Enter price of three room flats");
+        System.out.print("Enter price of three room flats: ");
         threeRoomPrice = sc.nextInt();
 
+        sc.nextLine();
 
-        System.out.print("Enter opening date for application (yyyy-mm-dd)");
+        System.out.print("Enter opening date for application (yyyy-mm-dd): ");
         appOpenDate = LocalDate.parse(sc.nextLine().trim());
 
-        System.out.print("Enter closing date for application (yyyy-mm-dd)");
+        System.out.print("Enter closing date for application (yyyy-mm-dd): ");
         appCloseDate = LocalDate.parse(sc.nextLine().trim());
 
         System.out.print("Enter number of available HDB Officer Slots: ");
         noAvailableOffice = sc.nextInt();
 
-        HDBManager manager = HDBManager.createUser();
+        sc.nextLine();
 
-        System.out.print("Enter The Officer Names");
+        System.out.print("Enter The Officer Names: ");
         String officerAssignedAsString = sc.nextLine().trim();
 
 
@@ -196,14 +197,14 @@ public class BTOProjectRepo {
                 case 9 -> System.out.println("Returning to menu...");
                 default -> System.out.println("Invalid choice. Try again.");
             }
-
+            System.out.println("");
         } while (choice != 9);
     }
 
-    /*
-     * removes project from list
-     * TODO check implementation, and check if this kind of data manipulation allowed
-     */
+    public void deleteProject(String projectName){
+        projects.removeIf(project -> project.getName().equals(projectName));
+    }
+
     public List<BTOProject> filterProject() {
         Scanner sc = new Scanner(System.in);
         List<BTOProject> filteredProjects = new ArrayList<>();

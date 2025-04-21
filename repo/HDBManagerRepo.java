@@ -42,7 +42,7 @@ public class HDBManagerRepo implements IUserRepo {
                 return manager;
             }
         }
-        System.out.println("No manager with such NRIC found");
+        //System.out.println("No manager with such NRIC found"); Unsafe, shows up even if login fail
         return null;
     }
 
