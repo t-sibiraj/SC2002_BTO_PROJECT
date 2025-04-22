@@ -6,13 +6,14 @@ import model.HDBOfficer;
 
 public class HDBOfficerBoundary {
 
-    private static final Scanner sc = new Scanner(System.in);
+    private final Scanner sc = new Scanner(System.in);
+    private HDBOfficerControl controller = new HDBOfficerControl();
 
-    public static void showOfficerMenu(HDBOfficer user) {
+    public void showOfficerMenu(HDBOfficer user) {
         int choice = -1;
         System.out.println("\nWelcome, " + user.getName() + "! (HDB Officer)");
 
-        while (choice != 9) {
+        while (true) {
             System.out.println("\n== Officer Menu ==");
             System.out.println("1. View Eligible Projects (as Applicant)");
             System.out.println("2. Apply for a Project (not handling)");
@@ -35,49 +36,24 @@ public class HDBOfficerBoundary {
                 sc.nextLine(); // consume newline
 
                 switch (choice) {
-                    case 1:
-                        HDBOfficerControl.viewEligibleProjects(user);
-                        break;
-                    case 2:
-                        HDBOfficerControl.handleSubmitApplication(user);
-                        break;
-                    case 3:
-                        HDBOfficerControl.viewApplication(user);
-                        break;
-                    case 4:
-                        HDBOfficerControl.handleWithdrawApplication(user);
-                        break;
-                    case 5:
-                        HDBOfficerControl.handleSubmitEnquiry(user);
-                        break;
-                    case 6:
-                        HDBOfficerControl.handleEditEnquiry(user);
-                        break;
-                    case 7:
-                        HDBOfficerControl.handleSubmitRegistration(user);
-                        break;
-                    case 8:
-                        HDBOfficerControl.handleViewRegistrationStatus(user);
-                        break;
-                    case 9:
-                        HDBOfficerControl.viewProjectHandling(user);
-                        break;
-                    case 10:
-                        HDBOfficerControl.viewAndReplyEnquiries(user);
-                        break;
-                    case 11:
-                        HDBOfficerControl.handleFlatBooking(user);
-                        break;
-                    case 12:
-                        HDBOfficerControl.generateBookingReceipt(user);
-                        break;
-                    case 13:
-                        HDBOfficerControl.updatePassword(user);
-                    case 14:
+                    case 1 -> controller.viewEligibleProjects(user);
+                    case 2 -> controller.handleSubmitApplication(user);
+                    case 3 -> controller.viewApplication(user);
+                    case 4 -> controller.handleWithdrawApplication(user);
+                    case 5 -> controller.handleSubmitEnquiry(user);
+                    case 6 -> controller.handleEditEnquiry(user);
+                    case 7 -> controller.handleSubmitRegistration(user);
+                    case 8 -> controller.handleViewRegistrationStatus(user);
+                    case 9 -> controller.viewProjectHandling(user);
+                    case 10 -> controller.viewAndReplyEnquiries(user);
+                    case 11 -> controller.handleFlatBooking(user);
+                    case 12 -> controller.generateBookingReceipt(user);
+                    case 13 -> controller.updatePassword(user);
+                    case 14 -> {
                         System.out.println("✅ Logging out...");
                         return;
-                    default:
-                        System.out.println("Invalid choice. Try again.");
+                    }
+                    default -> System.out.println("Invalid choice. Try again.");
                 }
             } else {
                 System.out.println("Please enter a valid number.");

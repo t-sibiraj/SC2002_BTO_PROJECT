@@ -9,7 +9,7 @@ public class HDBManager extends User{
     // ======================
     // Fields
     // ======================
-    private List<BTOProject> projects = new ArrayList<>();
+    private List<BTOProject> projects;
     private Report report;
 
     // ======================
@@ -17,6 +17,7 @@ public class HDBManager extends User{
     // ======================
     public HDBManager(String name, String nric, int age, boolean isMarried, String password) {
         super(name, nric, age, isMarried, password);
+        projects = new ArrayList<>();
         report = new Report(this);
     }
 
@@ -56,22 +57,6 @@ public class HDBManager extends User{
     // Updaters or Other Menthods
     // ======================
 
-    public void processWithdrawal(){
-        if (!this.projects.isEmpty()){
-            List<BTOApplication> applications;
-
-            for (BTOProject project : projects){//for each project in projects
-                applications= project.getApplications();//get project applications
-
-                for (BTOApplication application : applications){//for each application
-                    if(application.hasRequestedWithdraw())
-                        application.withdraw();
-                }
-            }    
-        }
-        else
-            System.out.println("No project to withdraw");       
-    }
 
     /*
      * toggles project visibility

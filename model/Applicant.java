@@ -1,6 +1,5 @@
 package model;
 
-import enums.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,22 +41,6 @@ public class Applicant extends User {
     // ======================
     // Other Methods
     // ======================
-
-    public void withdrawApplication() {
-        if (this.application == null) {
-            System.out.println("No application found.");
-            return;
-        }
-
-        if (this.application.hasRequestedWithdraw()) {
-            System.out.println("You have already requested a withdrawal.");
-            return;
-        }
-
-        this.application.withdraw();
-        this.application.setStatus(ApplicationStatus.WITHDRAWN);
-        System.out.println("Withdrawal request submitted successfully.");
-    }
 
     // ──────────────────────────────────────────────────────────────
     // ENQUIRY RELATED METHODS

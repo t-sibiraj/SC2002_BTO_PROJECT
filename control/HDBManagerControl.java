@@ -58,38 +58,27 @@ import java.util.Scanner;
 import model.*;
 import repo.*;
 import util.*;
-// import enums.*;
-
-// import java.util.List;
-// import java.util.ArrayList;
-// import java.util.List;
-// import java.util.stream.Collectors;
 
 public class HDBManagerControl {
 
-    private static BTOProjectRepo projectRepo;
-    private static ApplicantRepo applicantRepo;
-    private static HDBOfficerRepo officerRepo;
+    private BTOProjectRepo projectRepo;
+    private final Scanner sc = new Scanner(System.in);
 
-    public static void init(ApplicantRepo aRepo, BTOProjectRepo pRepo, HDBOfficerRepo oRepo) {
+    public void init(BTOProjectRepo pRepo) {
         projectRepo = pRepo;
-        applicantRepo = aRepo;
-        officerRepo = oRepo;
     }
 
     // 1. Create New Project
-    public static void handleCreateProject(HDBManager manager) {
+    public void handleCreateProject(HDBManager manager) {
         // Prompt for input fields and create BTOProject
         // Enforce: no overlapping project periods for same manager
         projectRepo.createProject(manager);
     }
 
     // 2. Edit Project
-    public static void handleEditProject(HDBManager manager) {
+    public void handleEditProject(HDBManager manager) {
         // Select from manager's projects
         // Update editable fields
-
-        Scanner sc = new Scanner(System.in);
 
         List<BTOProject> projects = manager.getprojects();
         if(projects.isEmpty())
@@ -123,9 +112,8 @@ public class HDBManagerControl {
     }
 
     // 3. Delete Project
-    public static void handleDeleteProject(HDBManager manager) {
+    public void handleDeleteProject(HDBManager manager) {
         // Select and remove project created by this manager
-        Scanner sc = new Scanner(System.in);
 
         List<BTOProject> projects = manager.getprojects();
         if(projects.isEmpty())
@@ -159,9 +147,8 @@ public class HDBManagerControl {
     }
 
     // 4. Toggle Visibility
-    public static void toggleProjectVisibility(HDBManager manager) {
+    public void toggleProjectVisibility(HDBManager manager) {
         // Toggle visibility for one of their projects
-        Scanner sc = new Scanner(System.in);
 
         List<BTOProject> projects = manager.getprojects();
         if(projects.isEmpty())
@@ -194,19 +181,19 @@ public class HDBManagerControl {
     }
 
     // 5. View All Projects
-    public static void viewAllProjects() {
+    public void viewAllProjects() {
         // List all projects regardless of visibility or owner
         projectRepo.printAllProjects();
     }
 
     // 6. View Only My Projects
-    public static void viewMyProjects(HDBManager manager) {
+    public void viewMyProjects(HDBManager manager) {
         // Filter projectRepo by manager.getNric()
         manager.viewProjects();
     }
 
     // 7. View Officer Registrations
-    public static void viewOfficerRegistrations(HDBManager manager) {
+    public void viewOfficerRegistrations(HDBManager manager) {
         // Show all officer registrations related to manager's projects
         if (manager.getprojects().isEmpty()){
             System.out.println("No projects");
@@ -222,11 +209,10 @@ public class HDBManagerControl {
     }
 
     // 8. Approve/Reject Officer Registration
-    public static void handleUpdateRegistration(HDBManager manager) {
+    public void handleUpdateRegistration(HDBManager manager) {
         // Approve or reject a registration
         // On approval, assign officer to project & decrease available officer slots
 
-        Scanner sc = new Scanner(System.in);
         List<OfficerRegistration> registrations = new ArrayList<>();
         
         for (BTOProject projects : manager.getprojects()){
@@ -289,7 +275,7 @@ public class HDBManagerControl {
     }
 
     // 9. View Applications to My Project
-    public static void viewApplications(HDBManager manager) {
+    public void viewApplications(HDBManager manager) {
         // List applications to manager's projects
         List<BTOProject> projects = manager.getprojects();
         if (projects.isEmpty()){
@@ -303,10 +289,10 @@ public class HDBManagerControl {
     }
 
     // 10. Approve/Reject Application
-    public static void handleUpdateApplication(HDBManager manager) {
+    public void handleUpdateApplication(HDBManager manager) {
         // Approve/reject application based on flat supply
         // Update project flat counts
-        Scanner sc = new Scanner(System.in);
+
         List<BTOProject> projects = manager.getprojects();
         List<BTOApplication> applications = new ArrayList<>();
 
@@ -372,15 +358,67 @@ public class HDBManagerControl {
     }
 
     // 11. Process Withdrawal Requests
-    public static void handleProcessWithdrawal(HDBManager manager) {
+    public void handleProcessWithdrawal(HDBManager manager) {
         // Show withdrawal requests for their projects
         // Allow manager to approve/reject
-        manager.processWithdrawal();
-        System.out.println("=== Withdrawal Processed ===");
+
+        if(manager.getprojects().isEmpty()){
+            System.out.println("No Withdrawals to show");
+        }
+
+        List<BTOApplication> withdrawals = new ArrayList<>();
+        for(BTOProject project : manager.getprojects()){//for each project
+            for(BTOApplication application : project.getApplications()){//for each project application
+                if(application.hasRequestedWithdraw()){//if application requested for withdrawal
+                    withdrawals.add(application);
+                }
+            }
+        }
+
+        System.out.println("=== Pending Withdrawals ===");
+        for (int i = 0; i < withdrawals.size(); i++) {
+            System.out.println((i + 1) + ". " + withdrawals.toString());
+        }
+
+        System.out.print("Enter the number of the withdrawals you want to approve/reject (0 to cancel): ");
+        int choice;
+        try {
+            choice = Integer.parseInt(sc.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input.");
+            return;
+        }
+
+        if (choice == 0) {
+            System.out.println("Operation cancelled.");
+            return;
+        }
+
+        if (choice < 0 || choice > withdrawals.size()) {
+            System.out.println("Invalid application number.");
+            return;
+        }
+
+        BTOApplication selected = withdrawals.get(choice -1);
+        System.out.println("\nSelected withdrawals:");
+        System.out.println(selected);
+        
+        System.out.print("Would you like to (A)pprove or (R)eject this withdrawals? ");
+        String action = sc.nextLine().trim().toLowerCase();
+
+        switch (action) {
+            case "a" -> {
+                selected.withdraw();
+            }
+            case "r" -> {
+                selected.rejectWithdraw();
+            }
+            default -> System.out.println("Invalid choice. Operation cancelled.");
+        }
     }
 
     // 12. View All Enquiries (all projects)
-    public static void viewAllEnquiries() {
+    public void viewAllEnquiries() {
         // Show enquiries across all projects
         System.out.println("=== List of All Enquiries ===");
         for (BTOProject project : projectRepo.getProjects()){
@@ -391,11 +429,10 @@ public class HDBManagerControl {
     }
 
     // 13. Reply to Enquiries (My Project Only)
-    public static void replyToEnquiries(HDBManager manager) {
+    public void replyToEnquiries(HDBManager manager) {
         // Allow manager to reply only to enquiries on their own projects
         List<BTOProject> projects = manager.getprojects();
         List<Enquiry> enquiries = new ArrayList<>();
-        Scanner sc = new Scanner(System.in);
 
         if (projects.isEmpty()){
             System.out.println("You are not managing any projects");
@@ -454,9 +491,8 @@ public class HDBManagerControl {
     }
 
     // 14. Generate Report (with filters)
-    public static void generateReports(HDBManager manager) {
+    public void generateReports(HDBManager manager) {
         // Generate and display applicant reports (e.g. filter by marital status, flat type, etc.)
-        Scanner sc = new Scanner(System.in);
 
         manager.generateReports();
 
@@ -492,7 +528,7 @@ public class HDBManagerControl {
     }
 
     // 15. Change Password
-    public static void changePassword(HDBManager manager) {
+    public void changePassword(HDBManager manager) {
         PasswordChanger.updatePassword(manager);
     }
 }

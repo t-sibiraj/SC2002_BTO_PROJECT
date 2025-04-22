@@ -1,5 +1,6 @@
+import boundary.LoginBoundary;
 import control.*;
-import java.util.Scanner;
+import java.util.*;
 import model.*;
 import repo.*;
 
@@ -8,15 +9,24 @@ public class MainApp {
         ApplicantRepo  applicantRepo = new ApplicantRepo();
         HDBOfficerRepo officerRepo   = new HDBOfficerRepo();
         HDBManagerRepo managerRepo   = new HDBManagerRepo();
-        BTOProjectRepo projectRepo   = new BTOProjectRepo();
-        ApplicantControl.init(applicantRepo, projectRepo);
-        HDBOfficerControl.init(applicantRepo, projectRepo, officerRepo);
-        HDBManagerControl.init(applicantRepo, projectRepo, officerRepo);
+        BTOProjectRepo projectRepo   = new BTOProjectRepo(managerRepo, officerRepo);
 
-        applicantRepo.loadFromCSV("data\\ApplicantList.csv");
-        officerRepo.loadFromCSV("data\\OfficerList.csv");
-        managerRepo.loadFromCSV("data\\ManagerList.csv");
-        projectRepo.loadFromCSV("data\\ProjectList.csv", managerRepo, officerRepo);
+        ApplicantControl applicantController = new ApplicantControl();
+        applicantController.init(projectRepo);
+        HDBOfficerControl officerController = new HDBOfficerControl();
+        officerController.init(applicantRepo, projectRepo, officerRepo);
+        HDBManagerControl managerController = new HDBManagerControl();
+        managerController.init(projectRepo);
+
+        List<IUserRepo<? extends User>> userRepos = Arrays.asList(applicantRepo, officerRepo, managerRepo);
+
+        LoginBoundary loginBoundary = new LoginBoundary();
+        LoginControl loginControl = new LoginControl(userRepos);
+
+        applicantRepo.loadFromCSV("data/ApplicantList.csv");
+        officerRepo.loadFromCSV("data/OfficerList.csv");
+        managerRepo.loadFromCSV("data/ManagerList.csv");
+        projectRepo.loadFromCSV("data/ProjectList.csv");
 
         
         for (HDBOfficer officer : officerRepo.getAllOfficers()){
@@ -58,42 +68,15 @@ public class MainApp {
 
                 switch (choice) {
                     case 1:
-                        System.out.print("Enter NRIC: ");
-                        String nric = sc.nextLine().trim();
-
-                        System.out.print("Enter password: ");
-                        String password = sc.nextLine().trim();
-
-                        User user = null;
-                        String role = "";
-
-                        if ((user = applicantRepo.getUser(nric)) != null) {
-                            role = "Applicant";
-                        } else if ((user = officerRepo.getUser(nric)) != null) {
-                            role = "HDB Officer";
-                        } else if ((user = managerRepo.getUser(nric)) != null) {
-                            role = "HDB Manager";
-                        }
-
-                        if (user != null && user.checkPassword(password)) {
-                            System.out.println("Login successful!");
-
-                            switch (role) {
-                                case "Applicant" -> boundary.ApplicantBoundary.showApplicantMenu((Applicant) user);
-                                case "HDB Officer" -> boundary.HDBOfficerBoundary.showOfficerMenu((HDBOfficer) user); 
-                                case "HDB Manager" -> boundary.HDBManagerBoundary.showManagerMenu((HDBManager) user);
-                            }
-                        } else {
-                            System.out.println("Invalid NRIC or password.");
-                        }
+                        loginBoundary.promptLogin(loginControl);
                         break;
                     case 2:
                         System.out.println("Goodbye!");
                         // applicantRepo.printAllApplicants(); //COMMENT
-                        applicantRepo.saveToCSV("../data/ApplicantList.csv");
-                        officerRepo.saveToCSV("../data/OfficerList.csv");
-                        managerRepo.saveToCSV("../data/ManagerList.csv");
-                        projectRepo.saveToCSV("../data/ProjectList.csv");
+                        applicantRepo.saveToCSV("data/ApplicantList.csv");
+                        officerRepo.saveToCSV("data/OfficerList.csv");
+                        managerRepo.saveToCSV("data/ManagerList.csv");
+                        projectRepo.saveToCSV("data/ProjectList.csv");
                         
                         break;
                     default:

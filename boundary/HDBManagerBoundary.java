@@ -11,13 +11,14 @@ import model.HDBManager;
 
 public class HDBManagerBoundary {
 
-    private static final Scanner sc = new Scanner(System.in);
+    private final Scanner sc = new Scanner(System.in);
+    private HDBManagerControl controller = new HDBManagerControl();
 
-    public static void showManagerMenu(HDBManager user) {
+    public void showManagerMenu(HDBManager user) {
         int choice = -1;
         System.out.println("\nWelcome, " + user.getName() + "! (HDB Manager)");
 
-        while (choice != 15) {
+        while (true) {
             System.out.println("\n== Manager Menu ==");
             System.out.println("1. Create New Project");
             System.out.println("2. Edit My Project");
@@ -42,55 +43,26 @@ public class HDBManagerBoundary {
                 sc.nextLine(); // consume newline
 
                 switch (choice) {
-                    case 1:
-                        HDBManagerControl.handleCreateProject(user);
-                        break;
-                    case 2:
-                        HDBManagerControl.handleEditProject(user);
-                        break;
-                    case 3:
-                        HDBManagerControl.handleDeleteProject(user);
-                        break;
-                    case 4:
-                        HDBManagerControl.toggleProjectVisibility(user);
-                        break;
-                    case 5:
-                        HDBManagerControl.viewAllProjects();
-                        break;
-                    case 6:
-                        HDBManagerControl.viewMyProjects(user);
-                        break;
-                    case 7:
-                        HDBManagerControl.viewOfficerRegistrations(user);
-                        break;
-                    case 8:
-                        HDBManagerControl.handleUpdateRegistration(user);
-                        break;
-                    case 9:
-                        HDBManagerControl.viewApplications(user);
-                        break;
-                    case 10:
-                        HDBManagerControl.handleUpdateApplication(user);
-                        break;
-                    case 11:
-                        HDBManagerControl.handleProcessWithdrawal(user);
-                        break;
-                    case 12:
-                        HDBManagerControl.viewAllEnquiries();
-                        break;
-                    case 13:
-                        HDBManagerControl.replyToEnquiries(user);
-                        break;
-                    case 14:
-                        HDBManagerControl.generateReports(user);
-                        break;
-                    case 15:
-                        HDBManagerControl.changePassword(user);
-                    case 16:
+                    case 1 -> controller.handleCreateProject(user);
+                    case 2 -> controller.handleEditProject(user);
+                    case 3 -> controller.handleDeleteProject(user);
+                    case 4 -> controller.toggleProjectVisibility(user);
+                    case 5 -> controller.viewAllProjects();
+                    case 6 -> controller.viewMyProjects(user);
+                    case 7 -> controller.viewOfficerRegistrations(user);
+                    case 8 -> controller.handleUpdateRegistration(user);
+                    case 9 -> controller.viewApplications(user);
+                    case 10 -> controller.handleUpdateApplication(user);
+                    case 11 -> controller.handleProcessWithdrawal(user);
+                    case 12 -> controller.viewAllEnquiries();
+                    case 13 -> controller.replyToEnquiries(user);
+                    case 14 -> controller.generateReports(user);
+                    case 15 -> controller.changePassword(user);
+                    case 16 -> {
                         System.out.println("Logging out...");
                         return;
-                    default:
-                        System.out.println("Invalid choice. Try again.");
+                    }  
+                    default -> System.out.println("Invalid choice. Try again.");
                 }
             } else {
                 System.out.println("Please enter a valid number.");

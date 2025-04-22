@@ -50,13 +50,14 @@ public class BTOProject {
 
         this.hdbManager = hdbManager;
         this.hdbManagerName  = this.hdbManager.getName();
-        this.hdbManager.addProject(this);
 
         this.applications = new ArrayList<>();
         this.enquiries = new ArrayList<>();
         this.officerRegistrations = new ArrayList<>();
         this.bookings = new ArrayList<>();
         // this.officerAssignedAsString = officerRegistrations.stream().map(reg -> reg.getOfficer().getName()).collect(Collectors.joining(","));
+
+        this.hdbManager.addProject(this);
     }
 
     // ======================

@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import model.HDBManager;
 
-public class HDBManagerRepo implements IUserRepo {
+public class HDBManagerRepo implements IUserRepo<HDBManager> {
     private List<HDBManager> managers = new ArrayList<>();
 
+    @Override
     public void addUser(HDBManager manager) {
         managers.add(manager);
     }
