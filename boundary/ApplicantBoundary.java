@@ -13,7 +13,7 @@ public class ApplicantBoundary {
         int choice = -1;
         System.out.println("\nWelcome, " + user.getName() + "! (Applicant)");
 
-        while (choice != 7) {
+        while (true) {
             System.out.println("\n== Applicant Menu ==");
             System.out.println("1. View Eligible Projects");
             System.out.println("2. Apply for a Project");

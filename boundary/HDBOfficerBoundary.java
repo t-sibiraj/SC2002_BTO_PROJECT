@@ -13,7 +13,7 @@ public class HDBOfficerBoundary {
         int choice = -1;
         System.out.println("\nWelcome, " + user.getName() + "! (HDB Officer)");
 
-        while (choice != 9) {
+        while (true) {
             System.out.println("\n== Officer Menu ==");
             System.out.println("1. View Eligible Projects (as Applicant)");
             System.out.println("2. Apply for a Project (not handling)");

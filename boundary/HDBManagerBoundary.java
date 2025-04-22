@@ -18,7 +18,7 @@ public class HDBManagerBoundary {
         int choice = -1;
         System.out.println("\nWelcome, " + user.getName() + "! (HDB Manager)");
 
-        while (choice != 15) {
+        while (true) {
             System.out.println("\n== Manager Menu ==");
             System.out.println("1. Create New Project");
             System.out.println("2. Edit My Project");

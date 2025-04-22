@@ -175,7 +175,12 @@ public class ApplicantControl {
             return;
         }
 
-        if (app.getApplicationStatus() == ApplicationStatus.WITHDRAWN) {
+        if (app.getApplicationStatus() == ApplicationStatus.WITHDRAWN){
+            System.out.println("You have already withdrawn.");
+            return;
+        }
+
+        if (app.hasRequestedWithdraw()) {
             System.out.println("You have already submitted a withdrawal request.");
             return;
         }
