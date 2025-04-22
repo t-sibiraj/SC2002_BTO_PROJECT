@@ -6,37 +6,81 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Represents a Build-To-Order (BTO) housing project with properties like flat types,
+ * application period, assigned manager, and officer registrations.
+ */
 public class BTOProject {
 
-    // ======================
-    // Fields
-    // ======================
+    /** Name of the project. */
     private String name;
+
+    /** Neighborhood where the project is located. */
     private String neighborhood;
+
+    /** Number of available 2-room flats. */
     private int twoRoomNo;
+
+    /** Number of available 3-room flats. */
     private int threeRoomNo;
+
+    /** Price of 2-room flats. */
     private int twoRoomPrice;
+
+    /** Price of 3-room flats. */
     private int threeRoomPrice;
+
+    /** Visibility status of the project to applicants. */
     private boolean visible;
+
+    /** Start date for application submission. */
     private LocalDate appOpenDate;
+
+    /** End date for application submission. */
     private LocalDate appCloseDate;
+
+    /** Number of available officer slots for handling the project. */
     private int noAvailableOffice;
+
+    /** Manager responsible for this project. */
     private HDBManager hdbManager;
+
+    /** Name of the manager as a string. */
     private String hdbManagerName;
+
+    /** String containing names of assigned officers. */
     private String officerAssignedAsString;
 
-
+    /** List of applications submitted to this project. */
     private List<BTOApplication> applications;
+
+    /** List of enquiries submitted for this project. */
     private List<Enquiry> enquiries;
+
+    /** List of officer registrations for handling this project. */
     private List<OfficerRegistration> officerRegistrations;
+
+    /** List of bookings made for this project. */
     private List<FlatBooking> bookings;
 
-    // ======================
-    // Constructor
-    // ======================
+    /**
+     * Constructs a new BTOProject with the specified details.
+     *
+     * @param name Project name
+     * @param neighborhood Project neighborhood
+     * @param twoRoomNo Number of 2-room flats
+     * @param threeRoomNo Number of 3-room flats
+     * @param twoRoomPrice Price of 2-room flats
+     * @param threeRoomPrice Price of 3-room flats
+     * @param appopenDate Application start date
+     * @param appcloseDate Application end date
+     * @param noAvailableOffice Number of officer slots available
+     * @param hdbManager Manager handling the project
+     * @param officerAssignedAsString Comma-separated string of assigned officer names
+     */
     public BTOProject(String name, String neighborhood, int twoRoomNo, int threeRoomNo,
                       int twoRoomPrice, int threeRoomPrice,
-                      LocalDate appopenDate, LocalDate appcloseDate, int noAvailableOffice, HDBManager hdbManager,String officerAssignedAsString) {
+                      LocalDate appopenDate, LocalDate appcloseDate, int noAvailableOffice, HDBManager hdbManager, String officerAssignedAsString) {
         this.name = name;
         this.neighborhood = neighborhood;
         this.twoRoomNo = twoRoomNo;
@@ -47,166 +91,152 @@ public class BTOProject {
         this.appOpenDate = appopenDate;
         this.appCloseDate = appcloseDate;
         this.noAvailableOffice = noAvailableOffice;
-
         this.hdbManager = hdbManager;
         this.hdbManagerName  = this.hdbManager.getName();
-
         this.applications = new ArrayList<>();
         this.enquiries = new ArrayList<>();
         this.officerRegistrations = new ArrayList<>();
         this.bookings = new ArrayList<>();
-        // this.officerAssignedAsString = officerRegistrations.stream().map(reg -> reg.getOfficer().getName()).collect(Collectors.joining(","));
-
+        this.officerAssignedAsString = officerRegistrations.stream().map(reg -> reg.getOfficer().getName()).collect(Collectors.joining(","));
         this.hdbManager.addProject(this);
     }
 
-    // ======================
-    // Getters
-    // ======================
-    public String getName() {
-        return name;
-    }
+    /** @return the name of the project */
+    public String getName() { return name; }
 
-    public String getNeighborhood() {
-        return neighborhood;
-    }
+    /** @return the neighborhood of the project */
+    public String getNeighborhood() { return neighborhood; }
 
-    public int getTwoRoomNo() {
-        return twoRoomNo;
-    }
+    /** @return the number of 2-room flats */
+    public int getTwoRoomNo() { return twoRoomNo; }
 
-    public int getThreeRoomNo() {
-        return threeRoomNo;
-    }
+    /** @return the number of 3-room flats */
+    public int getThreeRoomNo() { return threeRoomNo; }
 
-    public int getTwoRoomPrice() {
-        return twoRoomPrice;
-    }
+    /** @return the price of 2-room flats */
+    public int getTwoRoomPrice() { return twoRoomPrice; }
 
-    public int getThreeRoomPrice() {
-        return threeRoomPrice;
-    }
+    /** @return the price of 3-room flats */
+    public int getThreeRoomPrice() { return threeRoomPrice; }
 
-    public boolean isVisible() {
-        return this.visible;
-    }
+    /** @return whether the project is visible to applicants */
+    public boolean isVisible() { return this.visible; }
 
-    public LocalDate getAppOpenDate() {
-        return appOpenDate;
-    }
+    /** @return the start date for application submission */
+    public LocalDate getAppOpenDate() { return appOpenDate; }
 
-    public LocalDate getAppCloseDate() {
-        return appCloseDate;
-    }
+    /** @return the end date for application submission */
+    public LocalDate getAppCloseDate() { return appCloseDate; }
 
-    public int getNoAvailableOffice() {
-        return noAvailableOffice;
-    }
+    /** @return the number of available officer slots */
+    public int getNoAvailableOffice() { return noAvailableOffice; }
 
-    public List<BTOApplication> getApplications() {
-        return applications;
-    }
+    /** @return the list of applications submitted */
+    public List<BTOApplication> getApplications() { return applications; }
 
-    public List<Enquiry> getEnquiries() {
-        return enquiries;
-    }
+    /** @return the list of enquiries submitted */
+    public List<Enquiry> getEnquiries() { return enquiries; }
 
-    public List<OfficerRegistration> getOfficerRegistrations() {
-        return officerRegistrations;
-    }
+    /** @return the list of officer registrations */
+    public List<OfficerRegistration> getOfficerRegistrations() { return officerRegistrations; }
 
-    public String getHDBManagerName() {
-        return hdbManagerName;
-    }
+    /** @return the name of the HDB manager */
+    public String getHDBManagerName() { return hdbManagerName; }
 
+    /** @return a comma-separated string of assigned officer names */
     public String getOfficerAssignedAsString() {
         return officerRegistrations.stream()
                 .map(r -> r.getOfficer().getName())
-                .distinct() //eliminate duplicate displyaing of offciers in csv
-                .collect(Collectors.joining(",")); 
+                .distinct()
+                .collect(Collectors.joining(","));
     }
 
-    public List<FlatBooking> getBookings(){
-        return bookings;
-    }
+    /** @return list of bookings for this project */
+    public List<FlatBooking> getBookings() { return bookings; }
 
-    // ======================
-    // Setters
-    // ======================
-    public void setNeighborhood(String neighborhood) {
-        this.neighborhood = neighborhood;
-    }
+    /**
+     * Sets the neighborhood of the project.
+     * @param neighborhood the new neighborhood
+     */
+    public void setNeighborhood(String neighborhood) { this.neighborhood = neighborhood; }
 
-    public void setTwoRoomNo(int twoRoomNo) {
-        this.twoRoomNo = twoRoomNo;
-    }
+    /** Sets the number of 2-room flats. */
+    public void setTwoRoomNo(int twoRoomNo) { this.twoRoomNo = twoRoomNo; }
 
-    public void setThreeRoomNo(int threeRoomNo) {
-        this.threeRoomNo = threeRoomNo;
-    }
+    /** Sets the number of 3-room flats. */
+    public void setThreeRoomNo(int threeRoomNo) { this.threeRoomNo = threeRoomNo; }
 
-    public void setTwoRoomPrice(int twoRoomPrice) {
-        this.twoRoomPrice = twoRoomPrice;
-    }
+    /** Sets the price of 2-room flats. */
+    public void setTwoRoomPrice(int twoRoomPrice) { this.twoRoomPrice = twoRoomPrice; }
 
-    public void setThreeRoomPrice(int threeRoomPrice) {
-        this.threeRoomPrice = threeRoomPrice;
-    }
+    /** Sets the price of 3-room flats. */
+    public void setThreeRoomPrice(int threeRoomPrice) { this.threeRoomPrice = threeRoomPrice; }
 
-    public void setAppOpenDate(LocalDate appOpenDate) {
-        this.appOpenDate = appOpenDate;
-    }
+    /** Sets the application open date. */
+    public void setAppOpenDate(LocalDate appOpenDate) { this.appOpenDate = appOpenDate; }
 
-    public void setAppCloseDate(LocalDate appCloseDate) {
-        this.appCloseDate = appCloseDate;
-    }
+    /** Sets the application close date. */
+    public void setAppCloseDate(LocalDate appCloseDate) { this.appCloseDate = appCloseDate; }
 
-    public void setNoAvailableOffice(int noAvailableOffice) {
-        this.noAvailableOffice = noAvailableOffice;
-    }
+    /** Sets the number of available officer slots. */
+    public void setNoAvailableOffice(int noAvailableOffice) { this.noAvailableOffice = noAvailableOffice; }
 
-
-    // ======================
-    // Updaters
-    // ======================
-    // Add enquiry to enquiries list
+    /**
+     * Adds a new enquiry to the project.
+     * @param e the enquiry to add
+     */
     public void addEnquiry(Enquiry e) {
         this.enquiries.add(e);
         System.out.println("Enquiry successfully added");
     }
 
+    /**
+     * Adds a new application to the project.
+     * @param a the application to add
+     */
     public void addApplications(BTOApplication a) {
         applications.add(a);
     }
 
+    /**
+     * Adds a new officer registration if the officer isn't already registered.
+     * @param reg the officer registration
+     */
     public void addRegistration(OfficerRegistration reg) {
-        boolean exists = officerRegistrations
-                        .stream()
-                        .anyMatch(r -> r.getOfficer().equals(reg.getOfficer()));
+        boolean exists = officerRegistrations.stream()
+                .anyMatch(r -> r.getOfficer().equals(reg.getOfficer()));
         if (!exists) {
             officerRegistrations.add(reg);
         }
     }
 
+    /** Updates the string of assigned officer names. */
     public void updateOfficerAssignedString() {
         this.officerAssignedAsString = officerRegistrations.stream()
             .map(reg -> reg.getOfficer().getName())
             .collect(Collectors.joining(","));
     }
 
-    // Toggle visibility between true and false
+    /** Toggles the visibility status of the project. */
     public void toggleVisibility() {
         this.visible = !this.visible;
     }
 
-    // Check if project is currently active (between open and close date inclusive)
+    /**
+     * Checks whether the project is currently active.
+     * @return true if the current date is within the application period
+     */
     public boolean isActive() {
         LocalDate now = LocalDate.now();
         return (now.isAfter(this.appOpenDate) || now.isEqual(this.appOpenDate)) &&
                (now.isBefore(appCloseDate) || now.isEqual(appCloseDate));
     }
 
-    // Check if a flat type is available
+    /**
+     * Checks if flats of a specified type are available.
+     * @param flatType the type of flat to check
+     * @return true if available
+     */
     public boolean hasFlatAvailable(FlatType flatType) {
         return switch (flatType) {
             case TWOROOM -> twoRoomNo > 0;
@@ -214,7 +244,10 @@ public class BTOProject {
         };
     }
 
-    // Decrement flat count after booking
+    /**
+     * Decreases the count of the specified flat type by one.
+     * @param flatType the type of flat
+     */
     public void decrementFlatCount(FlatType flatType) {
         switch (flatType) {
             case TWOROOM -> this.twoRoomNo--;
@@ -222,29 +255,36 @@ public class BTOProject {
         }
     }
 
-
+    /**
+     * Adds an application to the project if it's not null.
+     * @param application the application to add
+     */
     public void addApplication(BTOApplication application) {
         if (application == null) {
             System.out.println("Cannot add null application.");
             return;
         }
-
         this.applications.add(application);
         System.out.println("Application added to project: " + this.name);
     }
 
-    //Decrement number of available offices
-    public void decrementAvailableOffice(){
+    /** Decreases the number of available officer slots by one. */
+    public void decrementAvailableOffice() {
         this.noAvailableOffice--;
     }
 
-    public void addBooking(FlatBooking booking){
+    /**
+     * Adds a new flat booking to the project.
+     * @param booking the booking to add
+     */
+    public void addBooking(FlatBooking booking) {
         this.bookings.add(booking);
     }
 
-    // ======================
-    // Factory Method
-    // ======================
+    /**
+     * Returns a formatted string describing the project.
+     * @return project details
+     */
     @Override
     public String toString() {
         return """
