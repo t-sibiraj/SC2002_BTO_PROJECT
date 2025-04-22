@@ -3,9 +3,21 @@ package util;
 import java.util.Scanner;
 import model.User;
 
+/**
+ * A utility class that provides functionality to update a user's password.
+ */
 public class PasswordChanger {
+
+    /** Scanner object for user input. */
     private static final Scanner sc = new Scanner(System.in);
 
+    /**
+     * Prompts the user to update their password.
+     * Verifies the current password, and ensures the new password is confirmed correctly
+     * before updating the user's password.
+     *
+     * @param user The {@code User} whose password is to be updated.
+     */
     public static void updatePassword(User user) {
         System.out.print("Enter current password: ");
         String currentPassword = sc.nextLine();

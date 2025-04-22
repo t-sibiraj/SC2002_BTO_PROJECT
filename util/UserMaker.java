@@ -3,8 +3,16 @@ package util;
 import java.util.Scanner;
 import model.User;
 
+/**
+ * A utility class to create {@code User} objects based on console input.
+ */
 public class UserMaker {
 
+    /**
+     * Prompts the user via the console to enter user details, and creates a {@code User} object.
+     *
+     * @return A new {@code User} instance populated with input values.
+     */
     public static User createUserFromInput() {
         Scanner sc = new Scanner(System.in);
 
