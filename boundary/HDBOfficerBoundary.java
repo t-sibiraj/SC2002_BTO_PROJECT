@@ -4,11 +4,25 @@ import control.HDBOfficerControl;
 import java.util.Scanner;
 import model.HDBOfficer;
 
+/**
+ * The {@code HDBOfficerBoundary} class handles the user interface for HDB officers.
+ * It allows officers to perform both applicant-related tasks and officer-specific functions,
+ * such as viewing eligible projects, applying or withdrawing, handling enquiries,
+ * registering to manage a project, and managing project-related tasks.
+ */
 public class HDBOfficerBoundary {
 
+    /** Scanner object for reading user input from the console. */
     private final Scanner sc = new Scanner(System.in);
+    /** Controller that manages logic and actions related to HDB officers. */
     private HDBOfficerControl controller = new HDBOfficerControl();
 
+    /**
+     * Displays the main menu for an HDB officer and handles their selected actions.
+     * This method continuously loops until the user chooses to log out.
+     *
+     * @param user The {@code HDBOfficer} currently logged in.
+     */
     public void showOfficerMenu(HDBOfficer user) {
         int choice = -1;
         System.out.println("\nWelcome, " + user.getName() + "! (HDB Officer)");

@@ -1,19 +1,28 @@
-
-// UNCOMMENT EVETYHING - SIBI
-
-
 package boundary;
 
 import control.HDBManagerControl;
 import java.util.Scanner;
 import model.HDBManager;
 
-
+/**
+ * The {@code HDBManagerBoundary} class provides the user interface for HDB managers.
+ * It allows managers to create, edit, and manage projects, view and handle applications,
+ * manage officer registrations, reply to enquiries, generate reports, and update passwords.
+ */
 public class HDBManagerBoundary {
 
+    /** Scanner object for reading user input from the console. */
     private final Scanner sc = new Scanner(System.in);
+
+    /** Controller that manages the logic and operations for the HDB manager. */
     private HDBManagerControl controller = new HDBManagerControl();
 
+    /**
+     * Displays the main menu for an HDB manager and handles the selection of options.
+     * This method loops continuously until the user chooses to log out.
+     *
+     * @param user The {@code HDBManager} who is currently logged in.
+     */
     public void showManagerMenu(HDBManager user) {
         int choice = -1;
         System.out.println("\nWelcome, " + user.getName() + "! (HDB Manager)");

@@ -4,11 +4,26 @@ import control.ApplicantControl;
 import java.util.Scanner;
 import model.Applicant;
 
+/**
+ * The {@code ApplicantBoundary} class handles the user interface
+ * for applicants interacting with the BTO Management System.
+ * It allows applicants to view and apply for projects, manage their applications,
+ * submit and edit enquiries, and update their password.
+ */
 public class ApplicantBoundary {
 
+    /** Scanner object for reading user input from the console. */
     private static final Scanner sc = new Scanner(System.in);
+
+    /** Controller that handles all applicant-related operations. */
     private ApplicantControl controller = new ApplicantControl();
 
+    /**
+     * Displays the main menu for an applicant and handles the selection of options.
+     * This method loops continuously until the user chooses to log out.
+     *
+     * @param user The {@code Applicant} who is currently logged in.
+     */
     public void showApplicantMenu(Applicant user) {
         int choice = -1;
         System.out.println("\nWelcome, " + user.getName() + "! (Applicant)");
