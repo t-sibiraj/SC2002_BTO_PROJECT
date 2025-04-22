@@ -23,10 +23,10 @@ public class MainApp {
         LoginBoundary loginBoundary = new LoginBoundary();
         LoginControl loginControl = new LoginControl(userRepos);
 
-        applicantRepo.loadFromCSV("data/ApplicantList.csv");
-        officerRepo.loadFromCSV("data/OfficerList.csv");
-        managerRepo.loadFromCSV("data/ManagerList.csv");
-        projectRepo.loadFromCSV("data/ProjectList.csv");
+        applicantRepo.loadFromCSV("../data/ApplicantList.csv");
+        officerRepo.loadFromCSV("../data/OfficerList.csv");
+        managerRepo.loadFromCSV("../data/ManagerList.csv");
+        projectRepo.loadFromCSV("../data/ProjectList.csv");
 
         
         for (HDBOfficer officer : officerRepo.getAllOfficers()){
@@ -73,10 +73,10 @@ public class MainApp {
                     case 2:
                         System.out.println("Goodbye!");
                         // applicantRepo.printAllApplicants(); //COMMENT
-                        applicantRepo.saveToCSV("data/ApplicantList.csv");
-                        officerRepo.saveToCSV("data/OfficerList.csv");
-                        managerRepo.saveToCSV("data/ManagerList.csv");
-                        projectRepo.saveToCSV("data/ProjectList.csv");
+                        applicantRepo.saveToCSV("../data/ApplicantList.csv");
+                        officerRepo.saveToCSV("../data/OfficerList.csv");
+                        managerRepo.saveToCSV("../data/ManagerList.csv");
+                        projectRepo.saveToCSV("../data/ProjectList.csv");
                         
                         break;
                     default:
