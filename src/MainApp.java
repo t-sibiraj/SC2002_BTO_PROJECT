@@ -69,10 +69,10 @@ public class MainApp {
                     case 2:
                         System.out.println("Goodbye!");
                         // applicantRepo.printAllApplicants(); //COMMENT
-                        applicantRepo.saveToCSV("../data/ApplicantList.csv");
-                        officerRepo.saveToCSV("../data/OfficerList.csv");
-                        managerRepo.saveToCSV("../data/ManagerList.csv");
-                        projectRepo.saveToCSV("../data/ProjectList.csv");
+                        applicantRepo.saveToCSV("data/ApplicantList.csv");
+                        officerRepo.saveToCSV("data/OfficerList.csv");
+                        managerRepo.saveToCSV("data/ManagerList.csv");
+                        projectRepo.saveToCSV("data/ProjectList.csv");
                         
                         break;
                     default:

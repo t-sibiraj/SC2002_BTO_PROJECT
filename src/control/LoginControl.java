@@ -36,10 +36,10 @@ public class LoginControl {
             return;
         }
         System.out.println("Login successful!");
-        if (user instanceof Applicant) {
-            ApplicantBoundary.showApplicantMenu((Applicant) user);
-        } else if (user instanceof HDBOfficer) {
+        if (user instanceof HDBOfficer) {
             HDBOfficerBoundary.showOfficerMenu((HDBOfficer) user);
+        } else if (user instanceof Applicant) {
+            ApplicantBoundary.showApplicantMenu((Applicant) user);
         } else if (user instanceof HDBManager) {
             HDBManagerBoundary.showManagerMenu((HDBManager) user);
         }
