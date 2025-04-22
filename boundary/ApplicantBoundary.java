@@ -7,8 +7,9 @@ import model.Applicant;
 public class ApplicantBoundary {
 
     private static final Scanner sc = new Scanner(System.in);
+    private ApplicantControl controller = new ApplicantControl();
 
-    public static void showApplicantMenu(Applicant user) {
+    public void showApplicantMenu(Applicant user) {
         int choice = -1;
         System.out.println("\nWelcome, " + user.getName() + "! (Applicant)");
 
@@ -29,32 +30,18 @@ public class ApplicantBoundary {
                 sc.nextLine();
 
                 switch (choice) {
-                    case 1:
-                        ApplicantControl.viewEligibleProjects(user);
-                        break;
-                    case 2:
-                        ApplicantControl.handleSubmitApplication(user);
-                        break;
-                    case 3:
-                        ApplicantControl.viewApplication(user);
-                        break;
-                    case 4:
-                        ApplicantControl.handleWithdrawApplication(user);
-                        break;
-                    case 5:
-                        ApplicantControl.handleSubmitEnquiry(user);
-                        break;
-                    case 6:
-                        ApplicantControl.handleEditEnquiry(user);
-                        break;
-                    case 7:
-                        ApplicantControl.updatePassword(user);
-                        break;
-                    case 8:
+                    case 1 -> controller.viewEligibleProjects(user);
+                    case 2 -> controller.handleSubmitApplication(user);
+                    case 3 -> controller.viewApplication(user);
+                    case 4 -> controller.handleWithdrawApplication(user);
+                    case 5 -> controller.handleSubmitEnquiry(user);
+                    case 6 -> controller.handleEditEnquiry(user);
+                    case 7 -> controller.updatePassword(user);
+                    case 8 -> {
                         System.out.println("✅ Logging out...");
                         return;
-                    default:
-                        System.out.println("Invalid choice. Try again.");
+                    }
+                    default -> System.out.println("Invalid choice. Try again.");
                 }
             } else {
                 System.out.println("Please enter a valid number.");

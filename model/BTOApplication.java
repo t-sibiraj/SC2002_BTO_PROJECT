@@ -67,14 +67,13 @@ public class BTOApplication{
     // Other Methods
     // ======================
     public void withdraw() {
-        if (status == ApplicationStatus.BOOKED) {
-            System.out.println("Cannot withdraw after flat is booked.");
-        } else if (wantWithdraw) {
-            System.out.println("Withdrawal already requested.");
-        } else {
-            this.wantWithdraw = true;
-            System.out.println("Withdrawal request submitted successfully.");
-        }
+        this.wantWithdraw = true;
+        System.out.println("Withdrawal request submitted successfully.");
+    }
+
+    public void rejectWithdraw() {
+        this.wantWithdraw = false;
+        System.out.println("Withdrawal request rejected successfully.");
     }
 
     // ======================

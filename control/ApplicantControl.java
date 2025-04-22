@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import model.*;
-import repo.ApplicantRepo;
 import repo.BTOProjectRepo;
 import util.*;
 
@@ -16,22 +15,19 @@ import util.*;
  *  actions.  Boundary classes handle input/output; this class does the work.
  */
 public class ApplicantControl {
+    private BTOProjectRepo projectRepo;
 
-    private static ApplicantRepo applicantRepo;
-    private static BTOProjectRepo projectRepo;
-
-    private static final Scanner sc = new Scanner(System.in);
+    private final Scanner sc = new Scanner(System.in);
 
     /** ENSURE TO CALL FROM MAIN */
-    public static void init(ApplicantRepo aRepo, BTOProjectRepo pRepo) {
-        applicantRepo = aRepo;
+    public void init(BTOProjectRepo pRepo) {
         projectRepo   = pRepo;
     }
 
     // ──────────────────────────────────────────────────────────────
     // 1. View Eligible Projects
     // ──────────────────────────────────────────────────────────────
-    public static void viewEligibleProjects(Applicant applicant) {
+    public void viewEligibleProjects(Applicant applicant) {
         List<BTOProject> allProjects = projectRepo.getProjects();
         boolean found = false;
 
@@ -71,12 +67,8 @@ public class ApplicantControl {
     // ──────────────────────────────────────────────────────────────
     // 2. Submit Application
     // ──────────────────────────────────────────────────────────────
-    public static void handleSubmitApplication(Applicant applicant) {
-        Scanner sc = new Scanner(System.in);
-
+    public void handleSubmitApplication(Applicant applicant) {
         // 1. Check if user already has an application
-        // System.out.println("CHECK NULL"); //comment
-        // System.out.println(applicant.getApplication()); //comment
         if (applicant.getApplication() != null) {
             ApplicationStatus currentStatus = applicant.getApplication().getApplicationStatus();
             if (currentStatus ==  ApplicationStatus.PENDING  || currentStatus == ApplicationStatus.SUCCESSFUL || currentStatus == ApplicationStatus.BOOKED) {
@@ -95,7 +87,7 @@ public class ApplicantControl {
         }
 
         // 3. Check project visibility
-        if (!project.isVisible()) {
+        if (!project.isVisible() || !project.isActive()) {//not visible or not active
             System.out.println("This project is not currently open for applications.");
             return;
         }
@@ -152,7 +144,7 @@ public class ApplicantControl {
     // ──────────────────────────────────────────────────────────────
     // 3. View Current Application
     // ──────────────────────────────────────────────────────────────
-    public static void viewApplication(Applicant applicant) {
+    public void viewApplication(Applicant applicant) {
         BTOApplication app = applicant.getApplication();
         if (app == null) {
             System.out.println("You have not applied for any project yet.");
@@ -175,8 +167,7 @@ public class ApplicantControl {
     // ──────────────────────────────────────────────────────────────
     // 4. Withdraw Application
     // ──────────────────────────────────────────────────────────────
-    public static void handleWithdrawApplication(Applicant applicant) {
-        Scanner sc = new Scanner(System.in);
+    public void handleWithdrawApplication(Applicant applicant) {
         BTOApplication app = applicant.getApplication();
 
         if (app == null) {
@@ -188,19 +179,12 @@ public class ApplicantControl {
             System.out.println("You have already submitted a withdrawal request.");
             return;
         }
-
-        if (app.getApplicationStatus() == ApplicationStatus.BOOKED) {
-            System.out.println("You have already booked a flat. Withdrawal is no longer allowed.");
-            return;
-        }
         
         System.out.print("Are you sure you want to request withdrawal? (yes/no): ");
         String confirm = sc.nextLine().trim().toLowerCase();
 
         if (confirm.equals("yes") || confirm.equals("y")) {
-            applicant.withdrawApplication();
-
-            System.out.println("Withdrawal request submitted.");
+            app.withdraw();
         } else {
             System.out.println("Withdrawal cancelled.");
         }
@@ -210,8 +194,7 @@ public class ApplicantControl {
     // ──────────────────────────────────────────────────────────────
     // 5. Submit Enquiry
     // ──────────────────────────────────────────────────────────────
-    public static void handleSubmitEnquiry(Applicant applicant) {
-        Scanner sc = new Scanner(System.in);
+    public void handleSubmitEnquiry(Applicant applicant) {
         List<BTOProject> visibleProjects;
         visibleProjects = projectRepo.getProjects().stream()
                 .filter(BTOProject::isVisible)
@@ -259,9 +242,7 @@ public class ApplicantControl {
     // ──────────────────────────────────────────────────────────────
     // 6. View / Edit / Delete Enquiries
     // ──────────────────────────────────────────────────────────────
-    public static void handleEditEnquiry(Applicant applicant) {
-        Scanner sc = new Scanner(System.in);
-
+    public void handleEditEnquiry(Applicant applicant) {
         List<Enquiry> enquiries = applicant.getEnquiries();
         if (enquiries.isEmpty()) {
             System.out.println("You have no enquiries to manage.");
@@ -321,11 +302,12 @@ public class ApplicantControl {
 
     }
 
-    public static void updatePassword(Applicant applicant) {
+    public void updatePassword(Applicant applicant) {
         PasswordChanger.updatePassword(applicant);
     }
 
-    private static FlatType promptFlatType() {
+    //UNUSED?
+    private FlatType promptFlatType() {
         System.out.print("Choose flat type (1 = 2‑Room, 2 = 3‑Room): ");
         int choice = sc.nextInt(); sc.nextLine();
         return (choice == 1) ? FlatType.TWOROOM : FlatType.THREEROOM;

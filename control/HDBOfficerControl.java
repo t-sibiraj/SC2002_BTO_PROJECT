@@ -6,28 +6,26 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 import model.*;
 import repo.*;
-import util.*;
 
-public class HDBOfficerControl {
+public class HDBOfficerControl extends ApplicantControl{
 
-    private static ApplicantRepo applicantRepo;
-    private static BTOProjectRepo projectRepo;
-    private static HDBOfficerRepo hdbOfficerRepo;
+    private ApplicantRepo applicantRepo;
+    private BTOProjectRepo projectRepo;
+    private HDBOfficerRepo hdbOfficerRepo;
 
-    private static final Scanner sc = new Scanner(System.in);
+    private final Scanner sc = new Scanner(System.in);
 
     /** ENSURE TO CALL FROM MAIN */
-    public static void init(ApplicantRepo aRepo, BTOProjectRepo pRepo, HDBOfficerRepo officerRepo) {
+    public void init(ApplicantRepo aRepo, BTOProjectRepo pRepo, HDBOfficerRepo officerRepo) {
         applicantRepo = aRepo;
         projectRepo = pRepo;
         hdbOfficerRepo = officerRepo;
     }
 
     // 1. View Eligible Projects (as Applicant)
-    public static void viewEligibleProjects(HDBOfficer officer) {
+    public void viewEligibleProjects(HDBOfficer officer) {
         List<BTOProject> allProjects = projectRepo.getProjects();
         boolean found = false;
 
@@ -68,10 +66,9 @@ public class HDBOfficerControl {
     }
 
     // 2. Apply for a Project (not handling)
-    public static void handleSubmitApplication(HDBOfficer officer) {
+    public void handleSubmitApplication(HDBOfficer officer) {
         // Allow officer to apply for a project they are not managing
         // Prevent re-application or application to project they registered for
-        Scanner sc = new Scanner(System.in);
 
         // 1. Check if user already has an application
         // System.out.println("CHECK NULL"); //comment
@@ -102,7 +99,7 @@ public class HDBOfficerControl {
         }
 
         // 4. Check project visibility
-        if (!project.isVisible()) {
+        if (!project.isVisible() || !project.isActive()) {//not visible or not active
             System.out.println("This project is not currently open for applications.");
             return;
         }
@@ -155,183 +152,18 @@ public class HDBOfficerControl {
 
         System.out.println("Application submitted successfully!");
     }
-
     // ──────────────────────────────────────────────────────────────
     // 3. View Current Application
-    // ──────────────────────────────────────────────────────────────
-    public static void viewApplication(HDBOfficer officer) {
-        BTOApplication app = officer.getApplication();
-        if (app == null) {
-            System.out.println("You have not applied for any project yet.");
-            return;
-        }
-
-        System.out.println("=== My BTO Application Summary ===");
-        System.out.println("Project Name       : " + app.getProject().getName());
-        System.out.println("Neighborhood       : " + app.getProject().getNeighborhood());
-        System.out.println("Flat Type Applied  : " + app.getFlatType());
-        System.out.println("Application Status : " + app.getApplicationStatus());
-
-        // Optional: If flat is booked, show booking date
-        if (app.getApplicationStatus() == ApplicationStatus.BOOKED && app.getFlatBooking() != null) {
-            System.out.println("Flat booked on  : " + app.getFlatBooking().getBookingDate());
-        }
-
-        System.out.println("==================================");
-        // applicantRepo.saveToCSV("data/ApplicantList.csv");
-        // projectRepo.saveToCSV("data/ProjectList.csv");
-    }
-
-    // ──────────────────────────────────────────────────────────────
     // 4. Withdraw Application
-    // ──────────────────────────────────────────────────────────────
-    public static void handleWithdrawApplication(HDBOfficer officer) {
-        Scanner sc = new Scanner(System.in);
-        BTOApplication app = officer.getApplication();
-
-        if (app == null) {
-            System.out.println("You have not applied for any project yet.");
-            return;
-        }
-
-        if (app.getApplicationStatus() == ApplicationStatus.WITHDRAWN) {
-            System.out.println("You have already submitted a withdrawal request.");
-            return;
-        }
-        
-        System.out.print("Are you sure you want to request withdrawal? (yes/no): ");
-        String confirm = sc.nextLine().trim().toLowerCase();
-
-        if (confirm.equals("yes") || confirm.equals("y")) {
-            officer.withdrawApplication();
-
-
-            System.out.println("Withdrawal request submitted.");
-        } else {
-            System.out.println("Withdrawal cancelled.");
-        }
-    }
-
-    // ──────────────────────────────────────────────────────────────
     // 5. Submit Enquiry
-    // ──────────────────────────────────────────────────────────────
-    public static void handleSubmitEnquiry(HDBOfficer officer) {
-        Scanner sc = new Scanner(System.in);
-        List<BTOProject> visibleProjects;
-        visibleProjects = projectRepo.getProjects().stream()
-                .filter(BTOProject::isVisible)
-                .collect(Collectors.toList());
-
-        if (visibleProjects.isEmpty()) {
-            System.out.println("No visible projects available to submit enquiries.");
-            return;
-        }
-
-        System.out.println("=== Available Projects ===");
-        for (int i = 0; i < visibleProjects.size(); i++) {
-            System.out.println((i + 1) + ". " + visibleProjects.get(i).getName());
-        }
-
-        System.out.print("Enter the number of the project you want to enquire about: ");
-        int choice;
-        try {
-            choice = Integer.parseInt(sc.nextLine().trim()) - 1;
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a number.");
-            return;
-        }
-
-        if (choice < 0 || choice >= visibleProjects.size()) {
-            System.out.println("Invalid project choice.");
-            return;
-        }
-
-        BTOProject selectedProject = visibleProjects.get(choice);
-
-        System.out.print("Enter your enquiry message: ");
-        String message = sc.nextLine().trim();
-
-        if (message.isEmpty()) {
-            System.out.println("Enquiry message cannot be empty.");
-            return;
-        }
-        
-        Enquiry enquiry = new Enquiry(officer, selectedProject, message);
-        officer.addEnquiry(enquiry);
-        selectedProject.addEnquiry(enquiry);
-
-}
-
-
-    // ──────────────────────────────────────────────────────────────
     // 6. View / Edit / Delete Enquiries
     // ──────────────────────────────────────────────────────────────
-    public static void handleEditEnquiry(HDBOfficer officer) {
-        Scanner sc = new Scanner(System.in);
-
-        List<Enquiry> enquiries = officer.getEnquiries();
-        if (enquiries.isEmpty()) {
-            System.out.println("You have no enquiries to manage.");
-            return;
-        }
-
-        // Display all enquiries with indexes
-        officer.viewEnquiries();
-
-        System.out.print("Enter the number of the enquiry you want to edit/delete (0 to cancel): ");
-        int choice;
-        try {
-            choice = Integer.parseInt(sc.nextLine()) - 1;
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input.");
-            return;
-        }
-
-        if (choice == -1) {
-            System.out.println("Operation cancelled.");
-            return;
-        }
-
-        if (choice < 0 || choice >= enquiries.size()) {
-            System.out.println("Invalid enquiry number.");
-            return;
-        }
-
-        Enquiry selected = enquiries.get(choice);
-        System.out.println("\nSelected Enquiry:");
-        System.out.println(selected);
-
-        System.out.print("Would you like to (E)dit or (D)elete this enquiry? ");
-        String action = sc.nextLine().trim().toLowerCase();
-
-        switch (action) {
-            case "e" -> {
-                if (selected.isReplied()) {
-                    System.out.println("This enquiry has already been replied to and cannot be edited.");
-                } else {
-                    System.out.print("Enter new message: ");
-                    String newMessage = sc.nextLine().trim();
-                    officer.editEnquiry(choice, newMessage);
-                }
-            }
-
-            case "d" -> {
-                if (selected.isReplied()) {
-                    System.out.println("This enquiry has already been replied to and cannot be deleted.");
-                } else {
-                    officer.deleteEnquiry(choice);
-                }
-            }
-
-            default -> System.out.println("Invalid choice. Operation cancelled.");
-        }
-
-    }
+    // avaliable in super class
 
     // ──────────────────────────────────────────────────────────────
     // 7. Register to Handle Project
     // ──────────────────────────────────────────────────────────────
-    public static void handleSubmitRegistration(HDBOfficer officer) {
+    public void handleSubmitRegistration(HDBOfficer officer) {
         // 1. Already handling a project?
         if (officer.isHandlingProject()) {
             System.out.println("You are already handling a project: " + officer.getProject().getName());
@@ -390,7 +222,7 @@ public class HDBOfficerControl {
     // ──────────────────────────────────────────────────────────────
     // 8 - View the status of the registration 
     // ──────────────────────────────────────────────────────────────
-    public static void handleViewRegistrationStatus(HDBOfficer officer) {
+    public void handleViewRegistrationStatus(HDBOfficer officer) {
         OfficerRegistration registration = officer.getRegistration();
 
         if (registration == null) {
@@ -410,7 +242,7 @@ public class HDBOfficerControl {
     // ──────────────────────────────────────────────────────────────
     // 9. View Project I’m Handling (even if not visible)
     // ──────────────────────────────────────────────────────────────
-    public static void viewProjectHandling(HDBOfficer officer) {
+    public void viewProjectHandling(HDBOfficer officer) {
         if (!officer.isHandlingProject()) {
             System.out.println("You are not currently handling any project.");
             return;
@@ -432,7 +264,7 @@ public class HDBOfficerControl {
     // ──────────────────────────────────────────────────────────────
     // 10. View/Reply to Enquiries (My Project Only)
     // ──────────────────────────────────────────────────────────────
-    public static void viewAndReplyEnquiries(HDBOfficer officer) {
+    public void viewAndReplyEnquiries(HDBOfficer officer) {
         if (!officer.isHandlingProject()) {
             System.out.println("You are not assigned to any project.");
             return;
@@ -500,7 +332,7 @@ public class HDBOfficerControl {
     // ──────────────────────────────────────────────────────────────
     // 11. Book Flat for Applicant
     // ──────────────────────────────────────────────────────────────
-    public static void handleFlatBooking(HDBOfficer user) {
+    public void handleFlatBooking(HDBOfficer user) {
         if (!user.isHandlingProject()) {
             System.out.println("You are not currently assigned to any project.");
             return;
@@ -547,7 +379,7 @@ public class HDBOfficerControl {
     // ──────────────────────────────────────────────────────────────
     // 12 - Generate Boooking Reciept
     // ──────────────────────────────────────────────────────────────
-    public static void generateBookingReceipt(HDBOfficer user) {
+    public void generateBookingReceipt(HDBOfficer user) {
         if (!user.isHandlingProject()) {
             System.out.println("You are not currently assigned to any project.");
             return;
@@ -586,11 +418,8 @@ public class HDBOfficerControl {
     // ──────────────────────────────────────────────────────────────
     // 13. Update Password 
     // ──────────────────────────────────────────────────────────────
-    public static void updatePassword(HDBOfficer user) {
-        PasswordChanger.updatePassword(user);
-    }
 
-    private static boolean datesOverlap(LocalDate start1, LocalDate end1, LocalDate start2, LocalDate end2) {
+    private boolean datesOverlap(LocalDate start1, LocalDate end1, LocalDate start2, LocalDate end2) {
         return !(end1.isBefore(start2) || end2.isBefore(start1));
     }
 }

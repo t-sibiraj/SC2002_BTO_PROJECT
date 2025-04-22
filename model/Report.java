@@ -1,14 +1,14 @@
 package model;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Report {
     private Map<Applicant, FlatBooking> info;
-    HDBManager manager;
 
     public Report(HDBManager manager){
-        this.manager = manager;
+        info = new HashMap<>();
         manager.updateReport(this);
     }
 

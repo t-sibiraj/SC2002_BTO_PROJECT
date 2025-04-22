@@ -52,7 +52,7 @@ public class OfficerRegistration {
     }
 
     // ======================
-    // Factory Mehtod
+    // Factory Method
     // ======================
     @Override
     public String toString() {
