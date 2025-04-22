@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import model.HDBOfficer;
 
-public class HDBOfficerRepo implements IUserRepo {
+public class HDBOfficerRepo implements IUserRepo<HDBOfficer> {
     private List<HDBOfficer> officers = new ArrayList<>();
 
 
     // ======================
     // ALL THE CREATE, DELETE , GET AND ADD METHODS
     // ======================
+    @Override
     public void addUser(HDBOfficer officer) {
         officers.add(officer);
     }

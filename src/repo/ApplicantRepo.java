@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.*;
 
-public class ApplicantRepo implements IUserRepo {
+public class ApplicantRepo implements IUserRepo<Applicant> {
     private List<Applicant> applicants = new ArrayList<>();
 
 
@@ -45,6 +45,7 @@ public class ApplicantRepo implements IUserRepo {
         return null;
     }
 
+    @Override
     public void addUser(Applicant applicant) {
         applicants.add(applicant);
     }

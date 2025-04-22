@@ -13,11 +13,15 @@ import java.util.List;
 import java.util.Scanner;
 import model.*;
 
-public class BTOProjectRepo {
+public class BTOProjectRepo implements IRepo {
     private List<BTOProject> projects;
+    private HDBManagerRepo managerRepo;
+    private HDBOfficerRepo officerRepo;
  
-    public BTOProjectRepo(){
+    public BTOProjectRepo(HDBManagerRepo managerRepo, HDBOfficerRepo officerRepo){
         this.projects = new ArrayList<>();
+        this.managerRepo = managerRepo;
+        this.officerRepo = officerRepo;
     }
 
     // ======================
@@ -267,6 +271,7 @@ public class BTOProjectRepo {
     // ======================
     // CSV METHODS
     // ======================
+    @Override
     public void saveToCSV(String fileName) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
         writer.println("Project Name,Neighborhood,Type 1,Number of units for Type 1,Selling price for Type 1,Type 2,Number of units for Type 2,Selling price for Type 2,Application opening date,Application closing date,Manager,Officer Slot,Officer");
@@ -296,7 +301,8 @@ public class BTOProjectRepo {
     }
 
 
-    public void loadFromCSV(String fileName, HDBManagerRepo managerRepo, HDBOfficerRepo officerRepo) {
+    @Override
+    public void loadFromCSV(String fileName) {
         try (Scanner sc = new Scanner(new File(fileName))) {
             if (sc.hasNextLine()) sc.nextLine(); // Skip header
 
