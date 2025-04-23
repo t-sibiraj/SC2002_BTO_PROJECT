@@ -4,7 +4,20 @@ import java.util.*;
 import model.*;
 import repo.*;
 
+/**
+ * Entry point of the BTO Management System application.
+ * This class initializes repositories, loads CSV data, sets up controllers,
+ * and starts the login loop for users (Applicants, HDB Officers, and HDB Managers).
+ */
 public class MainApp {
+
+    /**
+     * Main method that launches the BTO Management System.
+     * It initializes repositories and controllers, loads user and project data from CSV files,
+     * and handles the login menu loop with user interaction.
+     *
+     * @param args Command-line arguments (not used).
+     */
     public static void main(String[] args) {
         ApplicantRepo  applicantRepo = new ApplicantRepo();
         HDBOfficerRepo officerRepo   = new HDBOfficerRepo();
@@ -43,16 +56,12 @@ public class MainApp {
 
         }
 
-        
         // applicantRepo.printAllApplicants(); //COMMENT
         // officerRepo.printAllOfficers(); //COMMENT
         // managerRepo.printAllManagers(); //COMMENT
-        // projectRepo.printAllProjects(); //COMMENT
-        
-        
-
-        
+        // projectRepo.printAllProjects(); //COMMENT 
         // DataInitializer.initializeProjects(projectRepo);
+        
         Scanner sc = new Scanner(System.in);
         int choice = -1;
 

@@ -247,18 +247,14 @@ public class HDBOfficerControl extends ApplicantControl{
         }
 
         // 5. Check for overlapping application periods
-        for (HDBOfficer officerInRepo : hdbOfficerRepo.getAllOfficers()) {
-            OfficerRegistration reg = officerInRepo.getRegistration();
-            if (reg == null) continue;
 
-            if (officerInRepo.getNric().equals(officer.getNric()) &&
-                reg.getStatus() != RegistrationStatus.REJECTED &&
-                datesOverlap(project.getAppOpenDate(), project.getAppCloseDate(),
-                            reg.getProject().getAppOpenDate(), reg.getProject().getAppCloseDate())) {
+        OfficerRegistration reg = officer.getRegistration();
+        if (reg != null && reg.getStatus() != RegistrationStatus.REJECTED && 
+            datesOverlap(project.getAppOpenDate(), project.getAppCloseDate(),
+                reg.getProject().getAppOpenDate(), reg.getProject().getAppCloseDate())) {
 
-                System.out.println("You already have an officer registration that overlaps with this project's application period.");
-                return;
-            }
+            System.out.println("You already have an officer registration that overlaps with this project's application period.");
+            return;
         }
 
         // 6. All checks passed – submit registration
