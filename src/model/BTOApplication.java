@@ -88,7 +88,7 @@ public class BTOApplication {
      */
     public void withdraw() {
         this.wantWithdraw = true;
-        this.status = ApplicationStatus.WITHDRAWN
+        this.status = ApplicationStatus.WITHDRAWN;
         System.out.println("Withdrawal request submitted successfully.");
     }
 
