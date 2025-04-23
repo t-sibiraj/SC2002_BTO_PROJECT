@@ -1,4 +1,3 @@
-// File: test/ApplicationTest.java
 import model.*;
 import enums.*;
 import org.junit.jupiter.api.*;
