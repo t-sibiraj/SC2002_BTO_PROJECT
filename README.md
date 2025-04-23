@@ -194,7 +194,6 @@ boundary control model model.enums repo util src/MainApp.java
   | **29**            | Filter by married      |
   | **30**            | Filter by not married  |
   | **31**            | Filter by 2 room flats |
-  | **32**            |                        |
 
 ### Setup Testing Environment
 
@@ -226,7 +225,7 @@ Compile all the test files
 javac -d out -cp "lib/junit-platform-console-standalone-1.13.0-M2.jar:out:src" $(find test -name "*.java") 
 ```
 
-Run all th tests
+Run all the tests
 
 ```bash
 java -jar lib/junit-platform-console-standalone-1.13.0-M2.jar \
