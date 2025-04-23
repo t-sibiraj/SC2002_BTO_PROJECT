@@ -80,9 +80,6 @@ public class HDBManagerControl {
         }
 
         BTOProject selected = projects.get(choice - 1);
-        System.out.println("\nSelected project:");
-        System.out.println(selected);
-        
         projectRepo.editProject(selected.getName());
     }
 

@@ -3,6 +3,7 @@ package boundary;
 import control.ApplicantControl;
 import java.util.Scanner;
 import model.Applicant;
+import repo.BTOProjectRepo;
 
 /**
  * The {@code ApplicantBoundary} class handles the user interface
@@ -17,6 +18,10 @@ public class ApplicantBoundary {
 
     /** Controller that handles all applicant-related operations. */
     private ApplicantControl controller = new ApplicantControl();
+
+    public ApplicantBoundary(BTOProjectRepo projectRepo){
+        this.controller.init(projectRepo);
+    }
 
     /**
      * Displays the main menu for an applicant and handles the selection of options.
@@ -51,7 +56,10 @@ public class ApplicantBoundary {
                     case 4 -> controller.handleWithdrawApplication(user);
                     case 5 -> controller.handleSubmitEnquiry(user);
                     case 6 -> controller.handleEditEnquiry(user);
-                    case 7 -> controller.updatePassword(user);
+                    case 7 -> {
+                        controller.updatePassword(user);
+                        return;
+                    }
                     case 8 -> {
                         System.out.println("✅ Logging out...");
                         return;

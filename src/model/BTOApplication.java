@@ -38,7 +38,7 @@ public class BTOApplication {
         this.applicant = applicant;
         this.project = project;
         this.flatType = flatType;
-        this.status = ApplicationStatus.PENDING;  // CHANGE IT BACK TO PENDING REMEMBER
+        this.status = ApplicationStatus.SUCCESSFUL;  // CHANGE IT BACK TO PENDING REMEMBER
         this.wantWithdraw = false;
         this.applicant.setApplication(this);
     }

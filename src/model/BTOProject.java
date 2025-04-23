@@ -181,10 +181,6 @@ public class BTOProject {
     /** Sets the number of available officer slots. */
     public void setNoAvailableOffice(int noAvailableOffice) { this.noAvailableOffice = noAvailableOffice; }
 
-    /** Sets the visibility of the project */
-    public void setVisible(boolean visibility) {this.visible = visibility; }
-
-
     /**
      * Adds a new enquiry to the project.
      * @param e the enquiry to add

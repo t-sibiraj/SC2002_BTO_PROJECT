@@ -118,17 +118,15 @@ public class HDBOfficer extends Applicant {
         BTOApplication app = applicant.getApplication();
 
         if (!app.getApplicationStatus().equals(ApplicationStatus.SUCCESSFUL)) {
-            throw new IllegalStateException("Applicant is not eligible to book a flat.");
-        }
-
-        if (app.getFlatBooking() != null) {
-            throw new IllegalStateException("Applicant has already booked a flat.");
+            System.out.println("Applicant is not eligible to book a flat.");
+            return;
         }
 
         FlatType flatType = app.getFlatType();
 
         if (!assignedProject.hasFlatAvailable(flatType)) {
-            throw new IllegalStateException("No more flats of selected type available.");
+            System.out.println("No more flats of selected type available.");
+            return;
         }
 
         assignedProject.decrementFlatCount(flatType);

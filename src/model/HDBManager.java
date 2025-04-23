@@ -189,38 +189,6 @@ public class HDBManager extends User{
             System.out.println(filtered);
     }
 
-
-    /**
-     * Returns filtered report data as a string instead of printing it.
-     * Used for testing report content based on filters.
-     *
-     * @param filter The filter number (1-5).
-     * @return The filtered report string or "No reports".
-     */
-    public String getReportString(int filter) {
-        String filtered = switch(filter){
-            case 1 -> report.toString();
-            case 2 -> report.getInfo().entrySet().stream()
-                    .filter(e -> e.getKey().isMarried())
-                    .map(e -> e.getKey().getName() + "\n" + e.getValue().toString())
-                    .collect(Collectors.joining("/n"));
-            case 3 -> report.getInfo().entrySet().stream()
-                    .filter(e -> !e.getKey().isMarried())
-                    .map(e -> e.getKey().getName() + "\n" + e.getValue().toString())
-                    .collect(Collectors.joining("/n"));
-            case 4 -> report.getInfo().entrySet().stream()
-                    .filter(e -> e.getValue().getFlatType() == FlatType.TWOROOM)
-                    .map(e -> e.getKey().getName() + "\n" + e.getValue().toString())
-                    .collect(Collectors.joining("/n"));
-            case 5 -> report.getInfo().entrySet().stream()
-                    .filter(e -> e.getValue().getFlatType() == FlatType.THREEROOM)
-                    .map(e -> e.getKey().getName() + "\n" + e.getValue().toString())
-                    .collect(Collectors.joining("/n"));
-            default -> "invalid filter";
-        };
-
-        return filtered.isEmpty() ? "No reports" : filtered;
-    }
     /**
      * Populates the manager's report with all bookings from managed projects.
      */
