@@ -184,7 +184,7 @@ public class BTOProject {
     /** Sets the visibility of the project */
     public void setVisible(boolean visibility) {this.visible = visibility; }
 
-
+    
     /**
      * Adds a new enquiry to the project.
      * @param e the enquiry to add

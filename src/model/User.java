@@ -32,20 +32,19 @@ public class User {
      */
     public User(String name, String nric, int age, boolean isMarried, String password) {
 
-    if (name == null || !name.matches("^[a-zA-Z ]+$")) {
-        throw new IllegalArgumentException("Invalid name. Only letters and spaces are allowed.");
-    }
-
+        if (name == null || !name.matches("^[a-zA-Z ]+$")) {
+            throw new IllegalArgumentException("Invalid name. Only letters and spaces are allowed.");
+        }
     
-    if (!nric.matches("^[ST]\\d{7}[A-Z]$")) {
-        throw new IllegalArgumentException("Invalid NRIC format. Expected format like S1234567A.");
-    }
-
-    if (password == null || !password.matches("^[a-zA-Z0-9]{8,}$")) {
-        throw new IllegalArgumentException("Invalid password. Must be at least 8 characters long and contain only letters and digits.");
-    }
-
-
+        
+        if (!nric.matches("^[ST]\\d{7}[A-Z]$")) {
+            throw new IllegalArgumentException("Invalid NRIC format. Expected format like S1234567A.");
+        }
+    
+        if (password == null || !password.matches("^[a-zA-Z0-9]{8,}$")) {
+            throw new IllegalArgumentException("Invalid password. Must be at least 8 characters long and contain only letters and digits.");
+        }
+        
         this.name = name;
         this.nric = nric;
         this.age = age;

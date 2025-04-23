@@ -137,8 +137,8 @@ public class BTOProjectRepo implements IRepo {
             return;
         }
 
-        System.out.println("=== List of All BTO Projects ===");
-        for (BTOProject project : projects) {
+        //System.out.println("=== List of All BTO Projects ===");
+        for (BTOProject project : filterProject()) {
             System.out.println(project);
             System.out.println("------------------------------------------");
         }
@@ -164,6 +164,7 @@ public class BTOProjectRepo implements IRepo {
             return;
         }
 
+        System.out.println("Selected Project:");
         System.out.println(project);
         int choice;
         Scanner sc = new Scanner(System.in);
@@ -259,13 +260,14 @@ public class BTOProjectRepo implements IRepo {
         projects.sort((p1, p2) -> p1.getNeighborhood().compareToIgnoreCase(p2.getNeighborhood()));
 
         System.out.println("Filter by:");
-        System.out.println("1. Neighborhood");
-        System.out.println("2. Flat Type");
+        System.out.println("1. No Filter");
+        System.out.println("2. Neighbourhood");
+        System.out.println("3. Flat Type");
         System.out.print("Enter choice: ");
         String choice = sc.nextLine().trim();
 
         switch (choice) {
-            case "1" -> {
+            case "2" -> {
                 System.out.print("Enter neighborhood name: ");
                 String input = sc.nextLine().trim().toLowerCase();
                 for (BTOProject project : projects) {
@@ -275,7 +277,7 @@ public class BTOProjectRepo implements IRepo {
                 }
             }
 
-            case "2" -> {
+            case "3" -> {
                 System.out.println("a. Two Room Flats");
                 System.out.println("b. Three Room Flats");
                 System.out.print("Enter choice: ");
@@ -298,69 +300,23 @@ public class BTOProjectRepo implements IRepo {
                 }
             }
 
-            default -> System.out.println("Invalid filter option.");
+            default -> {
+                System.out.println("\nNo filter applied.");
+                System.out.println("=== List of All BTO Projects ===");
+                return projects;
+            }
         }
 
         if (filteredProjects.isEmpty()) {
-            System.out.println("No projects matched your criteria. Showing all.");
+            System.out.println("\n=== No projects matched your criteria. Showing all ===");
             return projects;
         }
 
+        System.out.println("\n=== List of Filtered BTO Projects ===");
         return filteredProjects;
     }
 
-    /**
-     * Filters BTO projects based on the given criteria type and value.
-     *
-     * Supported filter types:
-     * - "neighborhood": Filters projects whose neighborhood names contain the given value (case-insensitive).
-     * - "flat": Filters projects based on flat availability:
-     *     - "tworoom": Projects with at least one 2-room flat available.
-     *     - "threeroom": Projects with at least one 3-room flat available.
-     *
-     * @param type  The type of filter to apply ("neighborhood" or "flat").
-     * @param value The value to filter by (e.g., "Yishun" for neighborhood, "tworoom" or "threeroom" for flat type).
-     * @return A list of BTOProject instances that match the filter criteria.
-     */
-    public List<BTOProject> filterProjectByCriteria(String type, String value) {
-        List<BTOProject> filteredProjects = new ArrayList<>();
 
-        switch (type.toLowerCase()) {
-            case "neighborhood" -> {
-                for (BTOProject project : projects) {
-                    if (project.getNeighborhood().toLowerCase().contains(value.toLowerCase())) {
-                        filteredProjects.add(project);
-                    }
-                }
-            }
-
-            case "flat" -> {
-                switch (value.toLowerCase()) {
-                    case "tworoom" -> {
-                        for (BTOProject project : projects) {
-                            if (project.getTwoRoomNo() > 0) {
-                                filteredProjects.add(project);
-                            }
-                        }
-                    }
-
-                    case "threeroom" -> {
-                        for (BTOProject project : projects) {
-                            if (project.getThreeRoomNo() > 0) {
-                                filteredProjects.add(project);
-                            }
-                        }
-                    }
-
-                    default -> System.out.println("Invalid flat type filter value: " + value);
-                }
-            }
-
-            default -> System.out.println("Invalid filter type: " + type);
-        }
-
-        return filteredProjects;
-    }
 
     /**
      * Saves all projects to a CSV file.

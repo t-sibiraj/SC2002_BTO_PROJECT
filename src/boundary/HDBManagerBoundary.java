@@ -3,6 +3,7 @@ package boundary;
 import control.HDBManagerControl;
 import java.util.Scanner;
 import model.HDBManager;
+import repo.BTOProjectRepo;
 
 /**
  * The {@code HDBManagerBoundary} class provides the user interface for HDB managers.
@@ -16,6 +17,10 @@ public class HDBManagerBoundary {
 
     /** Controller that manages the logic and operations for the HDB manager. */
     private HDBManagerControl controller = new HDBManagerControl();
+
+    public HDBManagerBoundary(BTOProjectRepo projectRepo){
+        this.controller.init(projectRepo);
+    }
 
     /**
      * Displays the main menu for an HDB manager and handles the selection of options.
@@ -66,7 +71,10 @@ public class HDBManagerBoundary {
                     case 12 -> controller.viewAllEnquiries();
                     case 13 -> controller.replyToEnquiries(user);
                     case 14 -> controller.generateReports(user);
-                    case 15 -> controller.changePassword(user);
+                    case 15 -> {
+                        controller.changePassword(user);
+                        return;
+                    }
                     case 16 -> {
                         System.out.println("Logging out...");
                         return;

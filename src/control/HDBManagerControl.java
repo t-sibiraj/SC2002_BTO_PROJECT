@@ -80,9 +80,6 @@ public class HDBManagerControl {
         }
 
         BTOProject selected = projects.get(choice - 1);
-        System.out.println("\nSelected project:");
-        System.out.println(selected);
-        
         projectRepo.editProject(selected.getName());
     }
 
@@ -431,7 +428,7 @@ public class HDBManagerControl {
 
         switch (action) {
             case "a" -> {
-                selected.withdraw();
+                selected.approveWithdraw();
             }
             case "r" -> {
                 selected.rejectWithdraw();

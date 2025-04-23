@@ -24,17 +24,10 @@ public class MainApp {
         HDBManagerRepo managerRepo   = new HDBManagerRepo();
         BTOProjectRepo projectRepo   = new BTOProjectRepo(managerRepo, officerRepo);
 
-        ApplicantControl applicantController = new ApplicantControl();
-        applicantController.init(projectRepo);
-        HDBOfficerControl officerController = new HDBOfficerControl();
-        officerController.init(applicantRepo, projectRepo, officerRepo);
-        HDBManagerControl managerController = new HDBManagerControl();
-        managerController.init(projectRepo);
-
         List<IUserRepo<? extends User>> userRepos = Arrays.asList(applicantRepo, officerRepo, managerRepo);
 
         LoginBoundary loginBoundary = new LoginBoundary();
-        LoginControl loginControl = new LoginControl(userRepos);
+        LoginControl loginControl = new LoginControl(userRepos, applicantRepo, officerRepo, managerRepo, projectRepo);
 
         applicantRepo.loadFromCSV("data/ApplicantList.csv");
         officerRepo.loadFromCSV("data/OfficerList.csv");

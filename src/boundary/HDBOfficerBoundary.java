@@ -3,6 +3,9 @@ package boundary;
 import control.HDBOfficerControl;
 import java.util.Scanner;
 import model.HDBOfficer;
+import repo.ApplicantRepo;
+import repo.BTOProjectRepo;
+import repo.HDBOfficerRepo;
 
 /**
  * The {@code HDBOfficerBoundary} class handles the user interface for HDB officers.
@@ -16,6 +19,10 @@ public class HDBOfficerBoundary {
     private final Scanner sc = new Scanner(System.in);
     /** Controller that manages logic and actions related to HDB officers. */
     private HDBOfficerControl controller = new HDBOfficerControl();
+
+    public HDBOfficerBoundary(ApplicantRepo applicantRepo, BTOProjectRepo projectRepo, HDBOfficerRepo officerRepo){
+        this.controller.init(applicantRepo, projectRepo, officerRepo);
+    }
 
     /**
      * Displays the main menu for an HDB officer and handles their selected actions.
@@ -62,7 +69,10 @@ public class HDBOfficerBoundary {
                     case 10 -> controller.viewAndReplyEnquiries(user);
                     case 11 -> controller.handleFlatBooking(user);
                     case 12 -> controller.generateBookingReceipt(user);
-                    case 13 -> controller.updatePassword(user);
+                    case 13 -> {
+                        controller.updatePassword(user);
+                        return;
+                    }
                     case 14 -> {
                         System.out.println("✅ Logging out...");
                         return;

@@ -221,6 +221,7 @@ public class HDBManager extends User{
 
         return filtered.isEmpty() ? "No reports" : filtered;
     }
+
     /**
      * Populates the manager's report with all bookings from managed projects.
      */
@@ -231,7 +232,6 @@ public class HDBManager extends User{
             }
         }
     }
-
     /**
      * Replies to a submitted enquiry if it belongs to one of the manager's projects.
      *
