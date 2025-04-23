@@ -20,6 +20,14 @@ public class HDBOfficerBoundary {
     /** Controller that manages logic and actions related to HDB officers. */
     private HDBOfficerControl controller = new HDBOfficerControl();
 
+    /**
+     * Constructs a new {@code HDBOfficerBoundary} and initializes the officer controller
+     * with the necessary repositories for applicants, projects, and officers.
+     *
+     * @param applicantRepo The repository managing applicant data.
+     * @param projectRepo   The repository managing BTO project data.
+     * @param officerRepo   The repository managing HDB officer data.
+     */
     public HDBOfficerBoundary(ApplicantRepo applicantRepo, BTOProjectRepo projectRepo, HDBOfficerRepo officerRepo){
         this.controller.init(applicantRepo, projectRepo, officerRepo);
     }

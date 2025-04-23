@@ -19,6 +19,11 @@ public class ApplicantBoundary {
     /** Controller that handles all applicant-related operations. */
     private ApplicantControl controller = new ApplicantControl();
 
+    /**
+    * Constructs an ApplicantBoundary with the given BTOProjectRepo.
+    *
+    * @param projectRepo the repository of BTO projects
+    */
     public ApplicantBoundary(BTOProjectRepo projectRepo){
         this.controller.init(projectRepo);
     }

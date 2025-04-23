@@ -13,20 +13,44 @@ import repo.*;
  * based on user role (Applicant, HDBOfficer, or HDBManager).
  */
 public class LoginControl {
+
     /**
-     * List of user repositories representing all different user types.
+     * A list of user repositories containing various types of users
+     * (e.g., applicants, officers, managers) that implement {@link IUserRepo}.
      */
     private List<IUserRepo<? extends User>> userRepos;
+
+    /**
+     * The boundary class responsible for handling user interactions and UI logic
+     * for applicants (e.g., applying for projects, managing enquiries).
+     */
     private ApplicantBoundary applicantBoundary;
+
+    /**
+     * The boundary class responsible for handling user interactions and UI logic
+     * for HDB officers (e.g., booking flats, replying to enquiries).
+     */
     private HDBOfficerBoundary officerBoundary;
+
+    /**
+     * The boundary class responsible for handling user interactions and UI logic
+     * for HDB managers (e.g., managing projects, reviewing applications).
+     */
     private HDBManagerBoundary managerBoundary;
    
     /**
-     * Constructs a new LoginControl instance with the given user repositories.
+     * Constructs a new {@code LoginControl} instance with the specified user repositories
+     * and UI boundaries for each user type.
      *
-     * @param userRepos A list of repositories for different user types.
+     * @param userRepos          A list of repositories managing different user types (applicant, officer, manager).
+     * @param applicantBoundary  The boundary handler for applicant-related interactions.
+     * @param officerBoundary    The boundary handler for officer-related interactions.
+     * @param managerBoundary    The boundary handler for manager-related interactions.
      */
-    public LoginControl(List<IUserRepo<? extends User>> userRepos, ApplicantBoundary applicantBoundary, HDBOfficerBoundary officerBoundary, HDBManagerBoundary managerBoundary) {
+    public LoginControl(List<IUserRepo<? extends User>> userRepos, 
+                        ApplicantBoundary applicantBoundary, 
+                        HDBOfficerBoundary officerBoundary, 
+                        HDBManagerBoundary managerBoundary) {
         this.userRepos = userRepos;
         this.applicantBoundary = applicantBoundary;
         this.officerBoundary = officerBoundary;

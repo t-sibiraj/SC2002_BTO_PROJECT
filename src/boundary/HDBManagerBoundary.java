@@ -18,6 +18,12 @@ public class HDBManagerBoundary {
     /** Controller that manages the logic and operations for the HDB manager. */
     private HDBManagerControl controller = new HDBManagerControl();
 
+    /**
+     * Constructs a new {@code HDBManagerBoundary} and initializes the controller
+     * with the provided BTO project repository.
+     *
+     * @param projectRepo The repository containing BTO project data to be managed.
+     */
     public HDBManagerBoundary(BTOProjectRepo projectRepo){
         this.controller.init(projectRepo);
     }

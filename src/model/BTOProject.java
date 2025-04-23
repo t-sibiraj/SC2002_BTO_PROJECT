@@ -76,7 +76,7 @@ public class BTOProject {
      * @param appcloseDate Application end date
      * @param noAvailableOffice Number of officer slots available
      * @param hdbManager Manager handling the project
-     * @param officerAssignedAsString Comma-separated string of assigned officer names
+     * @param officerAsString Comma-separated string of assigned officer names
      */
     public BTOProject(String name, String neighborhood, int twoRoomNo, int threeRoomNo,
                       int twoRoomPrice, int threeRoomPrice,
@@ -105,49 +105,117 @@ public class BTOProject {
         this.hdbManager.addProject(this);
     }
 
-    /** @return the name of the project */
+
+    /**
+     * Returns the name of the BTO project.
+     *
+     * @return the name of the project
+     */
     public String getName() { return name; }
 
-    /** @return the neighborhood of the project */
+    /**
+     * Returns the neighborhood where the project is located.
+     *
+     * @return the neighborhood of the project
+     */
     public String getNeighborhood() { return neighborhood; }
 
-    /** @return the number of 2-room flats */
+
+    /**
+     * Returns the number of available 2-room flats in the project.
+     *
+     * @return the number of 2-room flats
+     */
     public int getTwoRoomNo() { return twoRoomNo; }
 
-    /** @return the number of 3-room flats */
+
+    /**
+     * Returns the number of available 3-room flats in the project.
+     *
+     * @return the number of 3-room flats
+     */
     public int getThreeRoomNo() { return threeRoomNo; }
 
-    /** @return the price of 2-room flats */
+
+    /**
+     * Returns the price of a 2-room flat.
+     *
+     * @return the price of 2-room flats
+     */
     public int getTwoRoomPrice() { return twoRoomPrice; }
 
-    /** @return the price of 3-room flats */
+
+    /**
+     * Returns the price of a 3-room flat.
+     *
+     * @return the price of 3-room flats
+     */
     public int getThreeRoomPrice() { return threeRoomPrice; }
 
-    /** @return whether the project is visible to applicants */
+
+    /**
+     * Checks whether the project is visible to applicants.
+     *
+     * @return {@code true} if the project is visible, {@code false} otherwise
+     */
     public boolean isVisible() { return this.visible; }
 
-    /** @return the start date for application submission */
+
+    /**
+     * Returns the start date for application submissions.
+     *
+     * @return the application's open date
+     */
     public LocalDate getAppOpenDate() { return appOpenDate; }
 
-    /** @return the end date for application submission */
+ 
+    /**
+     * Returns the closing date for application submissions.
+     *
+     * @return the application's close date
+     */
     public LocalDate getAppCloseDate() { return appCloseDate; }
 
-    /** @return the number of available officer slots */
+    /**
+     * Returns the number of officer slots still available for registration.
+     *
+     * @return the number of available officer slots
+     */
     public int getNoAvailableOffice() { return noAvailableOffice; }
 
-    /** @return the list of applications submitted */
+    /**
+     * Returns the list of all applications submitted for this project.
+     *
+     * @return a list of {@code BTOApplication} instances
+     */
     public List<BTOApplication> getApplications() { return applications; }
 
-    /** @return the list of enquiries submitted */
+    /**
+     * Returns the list of enquiries submitted by applicants for this project.
+     *
+     * @return a list of {@code Enquiry} instances
+     */
     public List<Enquiry> getEnquiries() { return enquiries; }
 
-    /** @return the list of officer registrations */
+    /**
+     * Returns the list of officer registrations for this project.
+     *
+     * @return a list of {@code OfficerRegistration} instances
+     */
     public List<OfficerRegistration> getOfficerRegistrations() { return officerRegistrations; }
 
-    /** @return the name of the HDB manager */
+    /**
+     * Returns the name of the HDB manager responsible for this project.
+     *
+     * @return the manager's name
+     */
     public String getHDBManagerName() { return hdbManagerName; }
 
-    /** @return a comma-separated string of assigned officer names */
+    /**
+     * Returns a comma-separated string of officer names assigned to this project.
+     *
+     * @return a string of assigned officer names
+     */
     public String getOfficerAssignedAsString() {
         return officerRegistrations.stream()
                 .map(r -> r.getOfficer().getName())
@@ -155,7 +223,11 @@ public class BTOProject {
                 .collect(Collectors.joining(","));
     }
 
-    /** @return list of bookings for this project */
+    /**
+     * Returns the list of all flat bookings made for this project.
+     *
+     * @return a list of {@code FlatBooking} instances
+     */
     public List<FlatBooking> getBookings() { return bookings; }
 
     /**
@@ -164,29 +236,61 @@ public class BTOProject {
      */
     public void setNeighborhood(String neighborhood) { this.neighborhood = neighborhood; }
 
-    /** Sets the number of 2-room flats. */
+    /**
+     * Sets the number of 2-room flats available in the project.
+     *
+     * @param twoRoomNo the number of 2-room flats
+     */
     public void setTwoRoomNo(int twoRoomNo) { this.twoRoomNo = twoRoomNo; }
 
-    /** Sets the number of 3-room flats. */
+    /**
+     * Sets the number of 3-room flats available in the project.
+     *
+     * @param threeRoomNo the number of 3-room flats
+     */
     public void setThreeRoomNo(int threeRoomNo) { this.threeRoomNo = threeRoomNo; }
 
-    /** Sets the price of 2-room flats. */
+    /**
+     * Sets the price for a 2-room flat.
+     *
+     * @param twoRoomPrice the price of a 2-room flat
+     */
     public void setTwoRoomPrice(int twoRoomPrice) { this.twoRoomPrice = twoRoomPrice; }
 
-    /** Sets the price of 3-room flats. */
+    /**
+     * Sets the price for a 3-room flat.
+     *
+     * @param threeRoomPrice the price of a 3-room flat
+     */
     public void setThreeRoomPrice(int threeRoomPrice) { this.threeRoomPrice = threeRoomPrice; }
 
-    /** Sets the application open date. */
+    /**
+     * Sets the date when the application period opens.
+     *
+     * @param appOpenDate the application open date
+     */
     public void setAppOpenDate(LocalDate appOpenDate) { this.appOpenDate = appOpenDate; }
 
-    /** Sets the application close date. */
+    /**
+     * Sets the date when the application period closes.
+     *
+     * @param appCloseDate the application close date
+     */
     public void setAppCloseDate(LocalDate appCloseDate) { this.appCloseDate = appCloseDate; }
 
-    /** Sets the number of available officer slots. */
+    /**
+     * Sets the number of officer registration slots available.
+     *
+     * @param noAvailableOffice the number of available officer slots
+     */
     public void setNoAvailableOffice(int noAvailableOffice) { this.noAvailableOffice = noAvailableOffice; }
 
-    /** Sets the visibility of the project */
-    public void setVisible(boolean visibility) {this.visible = visibility; }
+    /**
+     * Sets the visibility status of the project for applicants.
+     *
+     * @param visibility {@code true} to make the project visible, {@code false} to hide it
+     */
+    public void setVisible(boolean visibility) { this.visible = visibility; }
 
     
     /**

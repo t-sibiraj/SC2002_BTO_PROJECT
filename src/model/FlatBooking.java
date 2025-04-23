@@ -41,37 +41,47 @@ public class FlatBooking {
     }
 
     /**
-     * @return The type of flat booked.
+     * Returns the type of flat that was booked.
+     *
+     * @return the type of flat booked
      */
     public FlatType getFlatType() {
         return flatType;
     }
 
     /**
-     * @return The BTO project related to the booking.
+     * Returns the BTO project associated with this flat booking.
+     *
+     * @return the BTO project linked to the booking
      */
     public BTOProject getProject() {
         return project;
     }
 
     /**
-     * @return The date and time when the booking was made.
+     * Returns the date and time when the flat booking was made.
+     *
+     * @return the booking timestamp
      */
     public LocalDateTime getBookingDate() {
         return bookingDate;
     }
 
     /**
-     * @return True if the booking is resolved, false otherwise.
+     * Indicates whether the booking has been marked as resolved.
+     *
+     * @return true if the booking is resolved; false otherwise
      */
     public boolean isResolved() {
         return isResolved;
     }
 
     /**
-     * @return The application associated with this booking.
+     * Returns the application that is associated with this booking.
+     *
+     * @return the application linked to the booking
      */
-    public BTOApplication getApplication(){
+    public BTOApplication getApplication() {
         return application;
     }
 

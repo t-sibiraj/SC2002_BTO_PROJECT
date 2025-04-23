@@ -43,32 +43,62 @@ public class BTOApplication {
         this.applicant.setApplication(this);
     }
 
-    /** @return The applicant associated with this application. */
+
+    /**
+     * Returns the applicant associated with this application.
+     *
+     * @return The {@code Applicant} object linked to this application.
+     */
     public Applicant getApplicant() {
         return applicant;
     }
 
-    /** @return The BTO project for this application. */
+
+    /**
+     * Returns the BTO project for which the application was made.
+     *
+     * @return The {@code BTOProject} linked to this application.
+     */
     public BTOProject getProject() {
         return project;
     }
 
-    /** @return The type of flat applied for. */
+
+    /**
+     * Returns the type of flat the applicant applied for.
+     *
+     * @return The {@code FlatType} selected in the application.
+     */
     public FlatType getFlatType(){
         return flatType;
     }
 
-    /** @return True if a withdrawal has been requested. */
+
+    /**
+     * Checks if a withdrawal has been requested for this application.
+     *
+     * @return {@code true} if a withdrawal was requested, otherwise {@code false}.
+     */
     public boolean hasRequestedWithdraw() {
         return wantWithdraw;
     }
 
-    /** @return The current status of the application. */
+
+    /**
+     * Gets the current application status.
+     *
+     * @return The {@code ApplicationStatus} of the application.
+     */
     public ApplicationStatus getApplicationStatus() {
         return this.status;
     }
 
-    /** @return The flat booking linked to this application. */
+
+    /**
+     * Gets the flat booking details associated with this application.
+     *
+     * @return The {@code FlatBooking} instance if one exists, otherwise {@code null}.
+     */
     public FlatBooking getFlatBooking() {
         return this.flatBooking;
     }

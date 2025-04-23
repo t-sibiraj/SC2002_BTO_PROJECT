@@ -44,42 +44,54 @@ public class Enquiry {
     }
 
     /**
-     * @return The applicant who submitted the enquiry
+     * Returns the applicant who submitted the enquiry.
+     *
+     * @return the applicant who made the enquiry
      */
     public Applicant getApplicant() {
         return applicant;
     }
 
     /**
-     * @return The BTO project the enquiry is about
+     * Returns the BTO project that the enquiry is related to.
+     *
+     * @return the BTO project in question
      */
     public BTOProject getProject() {
         return project;
     }
 
     /**
-     * @return The enquiry message
+     * Returns the message content of the enquiry.
+     *
+     * @return the enquiry message
      */
     public String getMessage() {
         return message;
     }
 
     /**
-     * @return The reply to the enquiry, if any
+     * Returns the reply message to the enquiry, if any.
+     *
+     * @return the reply to the enquiry, or null if not replied
      */
     public String getReply() {
         return reply;
     }
 
     /**
-     * @return The timestamp when the enquiry was created
+     * Returns the timestamp indicating when the enquiry was created.
+     *
+     * @return the creation timestamp of the enquiry
      */
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
     /**
-     * @return True if the enquiry has been replied to, false otherwise
+     * Indicates whether the enquiry has been replied to.
+     *
+     * @return true if a reply has been provided; false otherwise
      */
     public boolean isReplied() {
         return this.isReplied;
