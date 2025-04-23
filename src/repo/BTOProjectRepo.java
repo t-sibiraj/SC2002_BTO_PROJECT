@@ -13,29 +13,58 @@ import java.util.List;
 import java.util.Scanner;
 import model.*;
 
+/**
+ * Repository class that manages BTO projects in the system.
+ * Handles project creation, editing, deletion, filtering, and CSV persistence.
+ */
 public class BTOProjectRepo implements IRepo {
+
+    /** List of all BTO projects currently managed. */
     private List<BTOProject> projects;
+
+    /** Repository holding all HDB managers, used for linking during load. */
     private HDBManagerRepo managerRepo;
+
+    /** Repository holding all HDB officers, used for linking during load. */
     private HDBOfficerRepo officerRepo;
  
+    /**
+     * Constructs a new BTOProjectRepo with manager and officer dependencies.
+     *
+     * @param managerRepo The repository of HDB managers.
+     * @param officerRepo The repository of HDB officers.
+     */
     public BTOProjectRepo(HDBManagerRepo managerRepo, HDBOfficerRepo officerRepo){
         this.projects = new ArrayList<>();
         this.managerRepo = managerRepo;
         this.officerRepo = officerRepo;
     }
 
-    // ======================
-    // ALL THE CREATE, DELETE , GET AND ADD METHODS
-    // ======================
+
+    /**
+     * Returns all loaded BTO projects.
+     *
+     * @return List of {@link BTOProject} instances.
+     */
     public List<BTOProject> getProjects() {
         return projects;
     }
 
+    /**
+     * Adds a BTO project to the repository.
+     *
+     * @param project The project to add.
+     */
     public void addUser(BTOProject project) {
         projects.add(project);
     }
 
 
+    /**
+     * Prompts input and creates a new BTO project linked to the given manager.
+     *
+     * @param manager The manager responsible for this project.
+     */
     public void createProject(HDBManager manager){
         String neighborhood, projectName;
         int twoRoomNo, threeRoomNo, twoRoomPrice, threeRoomPrice, noAvailableOffice;
@@ -82,6 +111,12 @@ public class BTOProjectRepo implements IRepo {
     }
 
 
+    /**
+     * Retrieves a BTO project by its name (case-insensitive).
+     *
+     * @param projectName The name of the project.
+     * @return The matching project or null if not found.
+     */
     public BTOProject getProject(String projectName) {
         for (BTOProject project : projects) {
             if (project.getName().equalsIgnoreCase(projectName)) {
@@ -92,9 +127,10 @@ public class BTOProjectRepo implements IRepo {
         return null;
     }
 
-    // ======================
-    // PRINT METHOD
-    // ======================
+
+    /**
+     * Prints all projects to the console, including their details.
+     */
     public void printAllProjects() {
         if (projects.isEmpty()) {
             System.out.println("No BTO projects available.");
@@ -109,10 +145,11 @@ public class BTOProjectRepo implements IRepo {
     }
 
 
-    // ======================
-    // OTHER METHODS
-    // ======================
-
+    /**
+     * Edits project attributes such as flat counts, prices, dates, and officer slots.
+     *
+     * @param projectName The name of the project to edit.
+     */
     public void editProject(String projectName) {
         BTOProject project = null;
         for (BTOProject p : projects) {
@@ -201,10 +238,20 @@ public class BTOProjectRepo implements IRepo {
         } while (choice != 9);
     }
 
+    /**
+     * Deletes a project by name.
+     *
+     * @param projectName The name of the project to delete.
+     */
     public void deleteProject(String projectName){
         projects.removeIf(project -> project.getName().equals(projectName));
     }
 
+    /**
+     * Filters projects based on neighborhood or available flat types.
+     *
+     * @return A filtered list of {@link BTOProject} instances, or all if none match.
+     */
     public List<BTOProject> filterProject() {
         Scanner sc = new Scanner(System.in);
         List<BTOProject> filteredProjects = new ArrayList<>();
@@ -264,9 +311,11 @@ public class BTOProjectRepo implements IRepo {
 
 
 
-    // ======================
-    // CSV METHODS
-    // ======================
+    /**
+     * Saves all projects to a CSV file.
+     *
+     * @param fileName The file to save to.
+     */
     @Override
     public void saveToCSV(String fileName) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
@@ -296,7 +345,11 @@ public class BTOProjectRepo implements IRepo {
         }
     }
 
-
+    /**
+     * Loads BTO projects from a CSV file, including manager and officer registrations.
+     *
+     * @param fileName The CSV file to read from.
+     */
     @Override
     public void loadFromCSV(String fileName) {
         try (Scanner sc = new Scanner(new File(fileName))) {

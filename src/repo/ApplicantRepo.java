@@ -4,13 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import model.*;
 
+/**
+ * Repository class that manages all {@link Applicant} objects.
+ * Provides methods to create, retrieve, delete, list, and persist applicants.
+ * Implements {@link IUserRepo} to provide generic user operations.
+ */
 public class ApplicantRepo implements IUserRepo<Applicant> {
+
+    /** Internal list storing all registered applicants. */
     private List<Applicant> applicants = new ArrayList<>();
 
 
-    // ======================
-    // ALL THE CREATE, DELETE , GET AND ADD METHODS
-    // ======================
+    /**
+     * Creates a new applicant by prompting user input.
+     * Adds the applicant to the repository if NRIC is unique.
+     */
     @Override
     public void createUser() {
         Applicant newApplicant = Applicant.createUser();
@@ -22,7 +30,11 @@ public class ApplicantRepo implements IUserRepo<Applicant> {
         System.out.println("Applicant registered successfully");
     }
 
-   
+    /**
+     * Deletes an applicant based on their NRIC.
+     *
+     * @param nric The NRIC of the applicant to delete.
+     */   
     @Override
     public void deleteUser(String nric) {
         boolean removed = applicants.removeIf(applicant -> applicant.getNric().equalsIgnoreCase(nric));
@@ -33,7 +45,12 @@ public class ApplicantRepo implements IUserRepo<Applicant> {
         }
     }
 
-   
+    /**
+     * Retrieves an applicant by NRIC.
+     *
+     * @param nric The NRIC to look up.
+     * @return The matching {@link Applicant}, or null if not found.
+     */ 
     @Override
     public Applicant getUser(String nric) {
         for (Applicant applicant : applicants) {
@@ -45,20 +62,29 @@ public class ApplicantRepo implements IUserRepo<Applicant> {
         return null;
     }
 
+    /**
+     * Adds an existing applicant to the repository.
+     *
+     * @param applicant The {@link Applicant} to add.
+     */
     @Override
     public void addUser(Applicant applicant) {
         applicants.add(applicant);
     }
 
-   
+    /**
+     * Returns the list of all registered applicants.
+     *
+     * @return List of {@link Applicant} objects.
+     */
     public List<Applicant> getAllApplicants() {
         return applicants;
     }
 
-
-    // ======================
-    // PRINT METHOD
-    // ======================
+    /**
+     * Prints the details of all applicants to the console.
+     * Displays a message if no applicants are available.
+     */
     public void printAllApplicants() {
     if (applicants.isEmpty()) {
         System.out.println("No applicants available.");
@@ -73,9 +99,11 @@ public class ApplicantRepo implements IUserRepo<Applicant> {
 }
 
 
-    // ======================
-    // CSV METHODS
-    // ======================
+    /**
+     * Saves all applicant data to a specified CSV file.
+     *
+     * @param fileName The file path to write the CSV to.
+     */
     @Override
     public void saveToCSV(String fileName) {
         try (java.io.PrintWriter writer = new java.io.PrintWriter(new java.io.File(fileName))) {
@@ -95,7 +123,11 @@ public class ApplicantRepo implements IUserRepo<Applicant> {
         }
     }
 
-
+    /**
+     * Loads applicant data from a CSV file and populates the repository.
+     *
+     * @param fileName The file path to read the CSV from.
+     */
     @Override
     public void loadFromCSV(String fileName) {
         try (java.util.Scanner sc = new java.util.Scanner(new java.io.File(fileName))) {
