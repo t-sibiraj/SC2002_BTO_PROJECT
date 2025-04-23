@@ -316,6 +316,58 @@ public class BTOProjectRepo implements IRepo {
         return filteredProjects;
     }
 
+    /**
+     * Filters BTO projects based on the given criteria type and value.
+     *
+     * Supported filter types:
+     * - "neighborhood": Filters projects whose neighborhood names contain the given value (case-insensitive).
+     * - "flat": Filters projects based on flat availability:
+     *     - "tworoom": Projects with at least one 2-room flat available.
+     *     - "threeroom": Projects with at least one 3-room flat available.
+     *
+     * @param type  The type of filter to apply ("neighborhood" or "flat").
+     * @param value The value to filter by (e.g., "Yishun" for neighborhood, "tworoom" or "threeroom" for flat type).
+     * @return A list of BTOProject instances that match the filter criteria.
+     */
+    public List<BTOProject> filterProjectByCriteria(String type, String value) {
+        List<BTOProject> filteredProjects = new ArrayList<>();
+
+        switch (type.toLowerCase()) {
+            case "neighborhood" -> {
+                for (BTOProject project : projects) {
+                    if (project.getNeighborhood().toLowerCase().contains(value.toLowerCase())) {
+                        filteredProjects.add(project);
+                    }
+                }
+            }
+
+            case "flat" -> {
+                switch (value.toLowerCase()) {
+                    case "tworoom" -> {
+                        for (BTOProject project : projects) {
+                            if (project.getTwoRoomNo() > 0) {
+                                filteredProjects.add(project);
+                            }
+                        }
+                    }
+
+                    case "threeroom" -> {
+                        for (BTOProject project : projects) {
+                            if (project.getThreeRoomNo() > 0) {
+                                filteredProjects.add(project);
+                            }
+                        }
+                    }
+
+                    default -> System.out.println("Invalid flat type filter value: " + value);
+                }
+            }
+
+            default -> System.out.println("Invalid filter type: " + type);
+        }
+
+        return filteredProjects;
+    }
 
 
     /**
