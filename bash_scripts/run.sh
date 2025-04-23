@@ -9,7 +9,6 @@ javac -d out $(find src -name "*.java")
 #chmod +x run.sh
 #./run.sh
 if [ $? -eq 0 ]; then
-    cd out
     java -cp out MainApp
 else
     echo "Compilation failed. Fix the errors before running."
