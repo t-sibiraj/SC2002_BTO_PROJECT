@@ -4,17 +4,29 @@ import java.util.ArrayList;
 import java.util.List;
 import model.HDBManager;
 
+/**
+ * Repository class for managing {@link HDBManager} users.
+ * Supports operations such as create, retrieve, delete, and load/save from CSV.
+ */
 public class HDBManagerRepo implements IUserRepo<HDBManager> {
+    /** Internal list storing all the HDB managers. */
     private List<HDBManager> managers = new ArrayList<>();
 
+    /**
+     * Adds an HDB Manager to the repository.
+     *
+     * @param manager the {@link HDBManager} instance to add
+     */
     @Override
     public void addUser(HDBManager manager) {
         managers.add(manager);
     }
 
-    // ======================
-    // ALL THE CREATE, DELETE , GET AND ADD METHODS
-    // ======================
+
+    /**
+     * Creates a new HDB Manager by prompting user input,
+     * and adds to the repository if the NRIC is unique.
+     */
     @Override
     public void createUser() {
         HDBManager manager = HDBManager.createUser();
@@ -26,6 +38,11 @@ public class HDBManagerRepo implements IUserRepo<HDBManager> {
         System.out.println("HDB Manager registered successfully");
     }
 
+    /**
+     * Deletes a manager with the given NRIC from the repository.
+     *
+     * @param nric the NRIC of the manager to delete
+     */
     @Override
     public void deleteUser(String nric) {
         boolean removed = managers.removeIf(manager -> manager.getNric().equalsIgnoreCase(nric));
@@ -36,6 +53,12 @@ public class HDBManagerRepo implements IUserRepo<HDBManager> {
         }
     }
 
+    /**
+     * Retrieves an HDB Manager by their NRIC.
+     *
+     * @param nric the NRIC to search for
+     * @return the {@link HDBManager} if found, else {@code null}
+     */
     @Override
     public HDBManager getUser(String nric) {
         for (HDBManager manager : managers) {
@@ -47,14 +70,22 @@ public class HDBManagerRepo implements IUserRepo<HDBManager> {
         return null;
     }
 
+
+    /**
+     * Returns a list of all HDB Managers in the repository.
+     *
+     * @return list of {@link HDBManager}
+     */
     public List<HDBManager> getAllManagers() {
         return managers;
     }
 
 
-    // ======================
-    // CSV METHODS
-    // ======================
+    /**
+     * Saves the current list of managers to a CSV file.
+     *
+     * @param fileName the name of the file to write to
+     */
     @Override
     public void saveToCSV(String fileName) {
         try (java.io.PrintWriter writer = new java.io.PrintWriter(new java.io.File(fileName))) {
@@ -74,6 +105,11 @@ public class HDBManagerRepo implements IUserRepo<HDBManager> {
         }
     }
 
+    /**
+     * Loads HDB Managers from a CSV file and populates the repository.
+     *
+     * @param fileName the name of the CSV file to read from
+     */
     @Override
     public void loadFromCSV(String fileName) {
         try (java.util.Scanner sc = new java.util.Scanner(new java.io.File(fileName))) {
@@ -97,9 +133,10 @@ public class HDBManagerRepo implements IUserRepo<HDBManager> {
         }
     }
 
-    // ======================
-    // PRINT METHOD
-    // ======================
+
+    /**
+     * Prints all HDB Managers currently in the repository to the console.
+     */
     public void printAllManagers() {
         if (managers.isEmpty()) {
             System.out.println("No HDB Managers available.");

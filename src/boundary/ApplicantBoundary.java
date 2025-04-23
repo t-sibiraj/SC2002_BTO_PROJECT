@@ -61,14 +61,14 @@ public class ApplicantBoundary {
                         return;
                     }
                     case 8 -> {
-                        System.out.println("✅ Logging out...");
+                        System.out.println("Logging out...");
                         return;
                     }
                     default -> System.out.println("Invalid choice. Try again.");
                 }
             } else {
                 System.out.println("Please enter a valid number.");
-                sc.nextLine(); // clear invalid input
+                sc.nextLine();
             }
         }
     }

@@ -4,19 +4,31 @@ import java.util.ArrayList;
 import java.util.List;
 import model.HDBOfficer;
 
+/**
+ * Repository class that manages {@link HDBOfficer} accounts.
+ * Provides methods to create, delete, retrieve officers, and load/save data to CSV files.
+ */
 public class HDBOfficerRepo implements IUserRepo<HDBOfficer> {
+
+    /** Internal list storing all the HDB officers. */
     private List<HDBOfficer> officers = new ArrayList<>();
 
 
-    // ======================
-    // ALL THE CREATE, DELETE , GET AND ADD METHODS
-    // ======================
+
+    /**
+     * Adds an {@link HDBOfficer} to the repository.
+     *
+     * @param officer the officer to add
+     */
     @Override
     public void addUser(HDBOfficer officer) {
         officers.add(officer);
     }
 
-
+    /**
+     * Prompts user input to create a new officer and adds them to the repository.
+     * Ensures no duplicate NRIC exists.
+     */
     @Override
     public void createUser() {
         HDBOfficer officer = HDBOfficer.createUser();
@@ -28,6 +40,11 @@ public class HDBOfficerRepo implements IUserRepo<HDBOfficer> {
         System.out.println("HDB Officer registered successfully!");
     }
 
+    /**
+     * Deletes an officer based on their NRIC.
+     *
+     * @param nric the NRIC of the officer to delete
+     */
     @Override
     public void deleteUser(String nric) {
         boolean removed = officers.removeIf(officer -> officer.getNric().equalsIgnoreCase(nric));
@@ -38,6 +55,13 @@ public class HDBOfficerRepo implements IUserRepo<HDBOfficer> {
         }
     }
 
+
+    /**
+     * Retrieves an officer using their NRIC.
+     *
+     * @param nric the NRIC to search for
+     * @return the {@link HDBOfficer} if found, otherwise {@code null}
+     */
     @Override
     public HDBOfficer getUser(String nric) {
         for (HDBOfficer officer : officers) {
@@ -49,13 +73,22 @@ public class HDBOfficerRepo implements IUserRepo<HDBOfficer> {
         return null;
     }
 
+
+    /**
+     * Gets the list of all registered officers.
+     *
+     * @return a list of {@link HDBOfficer} objects
+     */
     public List<HDBOfficer> getAllOfficers() {
         return officers;
     }
 
-    // ======================
-    // CSV METHODS
-    // ======================
+
+    /**
+     * Saves all officers to a CSV file.
+     *
+     * @param fileName the file path to save the CSV
+     */
     @Override
     public void saveToCSV(String fileName) {
         try (java.io.PrintWriter writer = new java.io.PrintWriter(new java.io.File(fileName))) {
@@ -75,6 +108,11 @@ public class HDBOfficerRepo implements IUserRepo<HDBOfficer> {
         }
     }
 
+    /**
+     * Loads officer data from a CSV file.
+     *
+     * @param fileName the path to the CSV file
+     */
     @Override
     public void loadFromCSV(String fileName) {
         try (java.util.Scanner sc = new java.util.Scanner(new java.io.File(fileName))) {
@@ -98,9 +136,10 @@ public class HDBOfficerRepo implements IUserRepo<HDBOfficer> {
         }
     }
 
-    // ======================
-    // PRINT METHOD
-    // ======================
+
+    /**
+     * Displays all officers in the repository in a readable format.
+     */
     public void printAllOfficers() {
         if (officers.isEmpty()) {
             System.out.println("No HDB Officers available.");
