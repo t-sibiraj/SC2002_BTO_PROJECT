@@ -428,7 +428,7 @@ public class HDBManagerControl {
 
         switch (action) {
             case "a" -> {
-                selected.withdraw();
+                selected.approveWithdraw();
             }
             case "r" -> {
                 selected.rejectWithdraw();

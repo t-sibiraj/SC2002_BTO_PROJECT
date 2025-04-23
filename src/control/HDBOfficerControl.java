@@ -413,6 +413,10 @@ public class HDBOfficerControl extends ApplicantControl{
         Applicant applicant = applicantRepo.getUser(nric);
 
         if (applicant == null) {
+            applicant = hdbOfficerRepo.getUser(nric);
+        }
+        
+        if (applicant == null) {
             System.out.println("Applicant not found.");
             return;
         }

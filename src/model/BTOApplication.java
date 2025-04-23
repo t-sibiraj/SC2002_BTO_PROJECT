@@ -92,6 +92,14 @@ public class BTOApplication {
     }
 
     /**
+     * Approves withdrawal request
+     */
+    public void approveWithdraw() {
+        this.status = ApplicationStatus.WITHDRAWN;
+        System.out.println("Withdrawal request submitted successfully.");
+    }
+
+    /**
      * Cancels a previous withdrawal request.
      */
     public void rejectWithdraw() {

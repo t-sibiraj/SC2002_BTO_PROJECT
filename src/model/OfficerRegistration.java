@@ -72,9 +72,12 @@ public class OfficerRegistration {
      * @throws IllegalArgumentException if the status is null.
      */
     public void setStatus(RegistrationStatus status) {
-        if (status == null) {
+        if (status == null) 
             throw new IllegalArgumentException("Status cannot be null.");
-        }
+            
+        if (status == RegistrationStatus.APPROVED)
+            this.getOfficer().setAssignedProject(this.getProject());
+
         this.status = status;
     }
 
