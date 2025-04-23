@@ -80,7 +80,7 @@ public class BTOProject {
      */
     public BTOProject(String name, String neighborhood, int twoRoomNo, int threeRoomNo,
                       int twoRoomPrice, int threeRoomPrice,
-                      LocalDate appopenDate, LocalDate appcloseDate, int noAvailableOffice, HDBManager hdbManager, String officerAssignedAsString) {
+                      LocalDate appopenDate, LocalDate appcloseDate, int noAvailableOffice, HDBManager hdbManager, String officerAsString) {
         this.name = name;
         this.neighborhood = neighborhood;
         this.twoRoomNo = twoRoomNo;
@@ -97,7 +97,11 @@ public class BTOProject {
         this.enquiries = new ArrayList<>();
         this.officerRegistrations = new ArrayList<>();
         this.bookings = new ArrayList<>();
-        this.officerAssignedAsString = officerRegistrations.stream().map(reg -> reg.getOfficer().getName()).collect(Collectors.joining(","));
+
+        this.officerAssignedAsString = officerAsString;
+        if (officerAsString.isEmpty()) {
+            this.officerAssignedAsString = officerRegistrations.stream().map(reg -> reg.getOfficer().getName()).collect(Collectors.joining(","));
+        }
         this.hdbManager.addProject(this);
     }
 
