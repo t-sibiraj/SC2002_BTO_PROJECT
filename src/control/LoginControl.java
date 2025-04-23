@@ -17,22 +17,20 @@ public class LoginControl {
      * List of user repositories representing all different user types.
      */
     private List<IUserRepo<? extends User>> userRepos;
-    private ApplicantRepo applicantRepo;
-    private HDBOfficerRepo officerRepo;
-    private HDBManagerRepo managerRepo;
-    private BTOProjectRepo projectRepo;
-
+    private ApplicantBoundary applicantBoundary;
+    private HDBOfficerBoundary officerBoundary;
+    private HDBManagerBoundary managerBoundary;
+   
     /**
      * Constructs a new LoginControl instance with the given user repositories.
      *
      * @param userRepos A list of repositories for different user types.
      */
-    public LoginControl(List<IUserRepo<? extends User>> userRepos, ApplicantRepo applicantRepo, HDBOfficerRepo officerRepo, HDBManagerRepo managerRepo, BTOProjectRepo projectRepo) {
+    public LoginControl(List<IUserRepo<? extends User>> userRepos, ApplicantBoundary applicantBoundary, HDBOfficerBoundary officerBoundary, HDBManagerBoundary managerBoundary) {
         this.userRepos = userRepos;
-        this.applicantRepo = applicantRepo;
-        this.officerRepo = officerRepo;
-        this.managerRepo = managerRepo;
-        this.projectRepo = projectRepo;
+        this.applicantBoundary = applicantBoundary;
+        this.officerBoundary = officerBoundary;
+        this.managerBoundary = managerBoundary;
     }
 
     /**
@@ -72,13 +70,10 @@ public class LoginControl {
         }
         System.out.println("Login successful!");
         if (user instanceof HDBOfficer officer) {
-            HDBOfficerBoundary officerBoundary = new HDBOfficerBoundary(applicantRepo, projectRepo, officerRepo);
             officerBoundary.showOfficerMenu(officer);
         } else if (user instanceof Applicant applicant) {
-            ApplicantBoundary applicantBoundary = new ApplicantBoundary(projectRepo);
             applicantBoundary.showApplicantMenu(applicant);
         } else if (user instanceof HDBManager manager) {
-            HDBManagerBoundary managerBoundary = new HDBManagerBoundary(projectRepo);
             managerBoundary.showManagerMenu(manager);
         }
     }

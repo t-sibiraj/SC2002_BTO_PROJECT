@@ -1,3 +1,6 @@
+import boundary.ApplicantBoundary;
+import boundary.HDBManagerBoundary;
+import boundary.HDBOfficerBoundary;
 import boundary.LoginBoundary;
 import control.*;
 import java.util.*;
@@ -26,8 +29,12 @@ public class MainApp {
 
         List<IUserRepo<? extends User>> userRepos = Arrays.asList(applicantRepo, officerRepo, managerRepo);
 
+        ApplicantBoundary applicantBoundary = new ApplicantBoundary(projectRepo);
+        HDBOfficerBoundary officerBoundary = new HDBOfficerBoundary(applicantRepo, projectRepo, officerRepo);
+        HDBManagerBoundary managerBoundary = new HDBManagerBoundary(projectRepo);
+
         LoginBoundary loginBoundary = new LoginBoundary();
-        LoginControl loginControl = new LoginControl(userRepos, applicantRepo, officerRepo, managerRepo, projectRepo);
+        LoginControl loginControl = new LoginControl(userRepos, applicantBoundary, officerBoundary, managerBoundary);
 
         applicantRepo.loadFromCSV("data/ApplicantList.csv");
         officerRepo.loadFromCSV("data/OfficerList.csv");
