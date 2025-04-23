@@ -11,22 +11,42 @@ import repo.BTOProjectRepo;
 import util.*;
 
 /**
- *  Control class that contains all the business logic for Applicant‑related
- *  actions.  Boundary classes handle input/output; this class does the work.
+ * Control class that contains all the business logic for Applicant‑related
+ * actions. Boundary classes handle input/output; this class does the work.
+ * 
+ * Responsibilities include handling application submission, withdrawal,
+ * enquiry management, and other applicant-specific actions.
  */
 public class ApplicantControl {
+
+    /** Repository containing all BTO project data. Used for filtering and lookup. */
     private BTOProjectRepo projectRepo;
 
+    /** Scanner object for receiving user input. Shared across control methods. */
     private final Scanner sc = new Scanner(System.in);
 
-    /** ENSURE TO CALL FROM MAIN */
+    /**
+     * Initializes the control class by linking it to a BTO project repository.
+     * This method should be called from the main application entry point.
+     *
+     * @param pRepo The BTO project repository to bind to this control class.
+     */
     public void init(BTOProjectRepo pRepo) {
-        projectRepo   = pRepo;
+        projectRepo = pRepo;
     }
 
-    // ──────────────────────────────────────────────────────────────
-    // 1. View Eligible Projects
-    // ──────────────────────────────────────────────────────────────
+    /**
+    * Displays a list of BTO projects the given applicant is eligible to apply for.
+    *
+    * Eligibility is based on marital status and age:
+    * - Married applicants must be at least 21 years old
+    * - Unmarried applicants must be at least 35 years old
+    *
+    * The method filters out invisible projects and prints the names,
+    * available flat types, prices, and application periods of eligible ones.
+    *
+    * @param applicant The applicant whose eligibility is being evaluated.
+    */
     public void viewEligibleProjects(Applicant applicant) {
         List<BTOProject> allProjects = projectRepo.getProjects();
         boolean found = false;
@@ -64,9 +84,18 @@ public class ApplicantControl {
 
 
 
-    // ──────────────────────────────────────────────────────────────
-    // 2. Submit Application
-    // ──────────────────────────────────────────────────────────────
+    /**
+    * Handles the full flow of submitting a BTO application for the given applicant.
+    *
+    * This includes:
+    * - Checking if the applicant already has an active application
+    * - Prompting for a project name and validating its existence and visibility
+    * - Evaluating the applicant's eligibility based on marital status and age
+    * - Displaying eligible flat types and processing the applicant's choice
+    * - Creating and saving the application if all conditions are met
+    *
+    * @param applicant The applicant attempting to submit a new application.
+    */
     public void handleSubmitApplication(Applicant applicant) {
         // 1. Check if user already has an application
         if (applicant.getApplication() != null) {
@@ -141,9 +170,17 @@ public class ApplicantControl {
         System.out.println("Application submitted successfully!");
     }
 
-    // ──────────────────────────────────────────────────────────────
-    // 3. View Current Application
-    // ──────────────────────────────────────────────────────────────
+
+    /**
+     * Displays a summary of the applicant's current BTO application.
+     *
+     * If the applicant has no application, a message is shown.
+     * Otherwise, the method prints the project name, neighborhood,
+     * flat type applied for, application status, and booking date
+     * if the application has been marked as booked.
+     *
+     * @param applicant The applicant whose application is to be viewed.
+     */
     public void viewApplication(Applicant applicant) {
         BTOApplication app = applicant.getApplication();
         if (app == null) {
@@ -164,9 +201,19 @@ public class ApplicantControl {
         System.out.println("==================================");
     }
 
-    // ──────────────────────────────────────────────────────────────
-    // 4. Withdraw Application
-    // ──────────────────────────────────────────────────────────────
+    /**
+     * Allows the applicant to submit a withdrawal request for their current BTO application.
+     *
+     * The method performs the following checks:
+     * - If the applicant has not applied for any project
+     * - If the application is already marked as withdrawn
+     * - If a withdrawal request has already been submitted
+     *
+     * If none of these conditions block the process, the user is prompted to confirm
+     * the withdrawal request. If confirmed, the request is submitted.
+     *
+     * @param applicant The applicant attempting to withdraw their application.
+     */
     public void handleWithdrawApplication(Applicant applicant) {
         BTOApplication app = applicant.getApplication();
 
@@ -196,9 +243,20 @@ public class ApplicantControl {
     }
 
 
-    // ──────────────────────────────────────────────────────────────
-    // 5. Submit Enquiry
-    // ──────────────────────────────────────────────────────────────
+    /**
+     * Handles the process of submitting an enquiry about a visible BTO project.
+     *
+     * The method displays a list of all visible projects, prompts the applicant to select one,
+     * and allows them to enter an enquiry message. If the input is valid, a new enquiry is created
+     * and added to both the applicant and the project.
+     *
+     * Validation includes:
+     * - Checking for available visible projects
+     * - Validating project selection input
+     * - Ensuring the enquiry message is not empty
+     *
+     * @param applicant The applicant submitting the enquiry.
+     */
     public void handleSubmitEnquiry(Applicant applicant) {
         List<BTOProject> visibleProjects;
         visibleProjects = projectRepo.getProjects().stream()
@@ -244,9 +302,22 @@ public class ApplicantControl {
         selectedProject.addEnquiry(enquiry);
 
 }
-    // ──────────────────────────────────────────────────────────────
-    // 6. View / Edit / Delete Enquiries
-    // ──────────────────────────────────────────────────────────────
+
+    /**
+     * Allows the applicant to view, edit, or delete their submitted enquiries.
+     *
+     * The method displays all current enquiries and prompts the applicant to choose one.
+     * Based on their selection, they can either:
+     * - Edit the enquiry message (if it hasn't been replied to)
+     * - Delete the enquiry (if it hasn't been replied to)
+     *
+     * Validation includes:
+     * - Ensuring the applicant has at least one enquiry
+     * - Validating the selected index
+     * - Preventing modifications to replied enquiries
+     *
+     * @param applicant The applicant managing their enquiries.
+     */
     public void handleEditEnquiry(Applicant applicant) {
         List<Enquiry> enquiries = applicant.getEnquiries();
         if (enquiries.isEmpty()) {
@@ -307,14 +378,21 @@ public class ApplicantControl {
 
     }
 
+    /**
+     * Invokes the password update flow for the given applicant.
+     *
+     * Delegates the password changing logic to the PasswordChanger utility class.
+     *
+     * @param applicant The applicant whose password will be updated.
+     */
     public void updatePassword(Applicant applicant) {
         PasswordChanger.updatePassword(applicant);
     }
 
-    //UNUSED?
-    private FlatType promptFlatType() {
-        System.out.print("Choose flat type (1 = 2‑Room, 2 = 3‑Room): ");
-        int choice = sc.nextInt(); sc.nextLine();
-        return (choice == 1) ? FlatType.TWOROOM : FlatType.THREEROOM;
-    }
+    // //UNUSED?
+    // private FlatType promptFlatType() {
+    //     System.out.print("Choose flat type (1 = 2‑Room, 2 = 3‑Room): ");
+    //     int choice = sc.nextInt(); sc.nextLine();
+    //     return (choice == 1) ? FlatType.TWOROOM : FlatType.THREEROOM;
+    // }
 }

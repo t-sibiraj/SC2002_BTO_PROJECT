@@ -1,53 +1,3 @@
-// You can refer to the OfficerControl code for similar functionality.
-// I have commented out a few imports because my VSCode auto-removes unused imports. 
-// So, please uncomment them when necessary.
-
-// In the main program, the repositories are first initialized and the same instances are used in all control classes.
-
-// Note that:
-// - Each Applicant object has its own Application and list of Enquiries.
-// - Each HDBOfficer has their own Application, Enquiries, and OfficerRegistration.
-// - Each BTOProject stores all (not "own") Applications, Enquiries, and OfficerRegistrations submitted for that project.
-
-// Therefore, when creating a new Application, it must be added to the BTOProject object (via the ProjectRepo)
-// **in addition to** setting it in the Applicant object (via the ApplicantRepo).
-
-// For example:
-// Enquiry enquiry = new Enquiry(applicant, selectedProject, message);
-// applicant.addEnquiry(enquiry);
-// selectedProject.addEnquiry(enquiry);
-
-// If you look closely, it’s the same Enquiry object stored in both the applicant and project.
-// So, if you update the Enquiry via the ApplicantRepo, the changes will automatically be reflected in the ProjectRepo too.
-// This same behavior applies to Application objects as well.
-
-// In OfficerControl, for instance, it retrieves an Application from the ProjectRepo,
-// and once it sets the status to BOOKED, the corresponding object in the ApplicantRepo also reflects the update,
-// because they point to the same object in memory.
-
-// At the HDBManagerControl level, most of the objects that need to be added to repos will already be added elsewhere.
-// One of the few things you might need to add here is a **new Project** to the ProjectRepo.
-// Other than that, most entities (Applications, Registrations, Enquiries) are already handled.
-
-// As long as your function modifies a shared object (e.g., Application or Enquiry),
-// those changes will be reflected across all repos automatically.
-
-// Here’s what you should prioritize (in order of importance):
-// 1. Complete the control/HDBManagerControl and model/HDBManagerclass (add more menu options if needed).
-// 1.1 You might have to add or modify some functionalities of repo/BTOProjectRepo also to achive 1
-// 2. Write the coding report and perform testing for the HDB Manager functionality only
-// 3. Implement input validation (basic checks) (I have already have a few checks in place for null).
-//    - Go through each file and check any Scanner input lines.
-//    - Add basic input validation there.
-//    - To reduce code duplication, you can create utility methods for validation inside the `util` package.
-
-
-
-// I WILL LATER ADD DOCUMENTATION COMMENTS FOR THINGS THAT ARE ALREADY CODED SO FAR. FOR THE THINGS THAT YOU WILL BE CODING JUST ADD THE DOC COMMENTS YOURSELF
-// ALSO PUSH YOUR CHANGES TO THE GITHUB REPO REGULARY SO THAT ITS EASIER TO RESOLVE IF THERE IS A CONFLICT
-// IF YOU GOT ANY QUESTIONS JUST FEEL FREE TO MESSAGE ME
-
-
 package control;
 
 import enums.ApplicationStatus;
@@ -59,23 +9,48 @@ import model.*;
 import repo.*;
 import util.*;
 
+/**
+ * Control class that handles all business logic related to HDB Manager actions.
+ * This includes managing BTO projects, approving officer registrations,
+ * handling application decisions, and generating reports.
+ */
 public class HDBManagerControl {
 
+    /** Repository containing all BTO project data accessible to the manager. */
     private BTOProjectRepo projectRepo;
+
+    /** Scanner for reading user input during manager interactions. */
     private final Scanner sc = new Scanner(System.in);
 
+    /**
+     * Initializes the control class by linking it to a BTO project repository.
+     * This must be called before invoking any manager-related operations.
+     *
+     * @param pRepo The project repository to associate with this controller.
+     */
     public void init(BTOProjectRepo pRepo) {
         projectRepo = pRepo;
     }
 
-    // 1. Create New Project
+    /**
+     * Handles the creation of a new BTO project by the manager.
+     * Delegates the creation logic to the project repository.
+     *
+     * @param manager The HDB manager creating the project.
+     */
     public void handleCreateProject(HDBManager manager) {
         // Prompt for input fields and create BTOProject
         // Enforce: no overlapping project periods for same manager
         projectRepo.createProject(manager);
     }
 
-    // 2. Edit Project
+    /**
+     * Allows the manager to select and edit one of their existing projects.
+     * Displays the list of projects, validates the selection,
+     * and delegates the editing logic to the project repository.
+     *
+     * @param manager The HDB manager editing their project.
+     */
     public void handleEditProject(HDBManager manager) {
         // Select from manager's projects
         // Update editable fields
@@ -111,7 +86,13 @@ public class HDBManagerControl {
         projectRepo.editProject(selected.getName());
     }
 
-    // 3. Delete Project
+    /**
+     * Allows the manager to delete one of their projects.
+     * Displays the list of projects, validates the selection,
+     * and removes the selected project via the repository.
+     *
+     * @param manager The HDB manager deleting their project.
+     */
     public void handleDeleteProject(HDBManager manager) {
         // Select and remove project created by this manager
 
@@ -146,7 +127,13 @@ public class HDBManagerControl {
         projectRepo.deleteProject(selected.getName());
     }
 
-    // 4. Toggle Visibility
+
+    /**
+     * Toggles the visibility of a project managed by the HDB manager.
+     * Displays the manager's projects and updates the visibility of the selected one.
+     *
+     * @param manager The HDB manager toggling project visibility.
+     */
     public void toggleProjectVisibility(HDBManager manager) {
         // Toggle visibility for one of their projects
 
@@ -180,19 +167,30 @@ public class HDBManagerControl {
         System.out.println(selected);
     }
 
-    // 5. View All Projects
+    /**
+     * Displays all BTO projects available in the system, regardless of visibility or owner.
+     */
     public void viewAllProjects() {
         // List all projects regardless of visibility or owner
         projectRepo.printAllProjects();
     }
 
-    // 6. View Only My Projects
+    /**
+     * Displays only the projects created by the given HDB manager.
+     *
+     * @param manager The manager whose projects are to be viewed.
+     */
     public void viewMyProjects(HDBManager manager) {
         // Filter projectRepo by manager.getNric()
         manager.viewProjects();
     }
 
-    // 7. View Officer Registrations
+
+    /**
+     * Displays all officer registration requests associated with the manager's projects.
+     *
+     * @param manager The manager reviewing officer registrations.
+     */
     public void viewOfficerRegistrations(HDBManager manager) {
         // Show all officer registrations related to manager's projects
         if (manager.getprojects().isEmpty()){
@@ -208,7 +206,14 @@ public class HDBManagerControl {
         System.out.println("------------------------------------------");
     }
 
-    // 8. Approve/Reject Officer Registration
+
+    /**
+     * Handles the approval or rejection of pending officer registration requests
+     * for the manager's projects. On approval, assigns the officer to the project
+     * and decrements the number of available officer slots.
+     *
+     * @param manager The HDB manager processing officer registrations.
+     */
     public void handleUpdateRegistration(HDBManager manager) {
         // Approve or reject a registration
         // On approval, assign officer to project & decrease available officer slots
@@ -274,7 +279,12 @@ public class HDBManagerControl {
 
     }
 
-    // 9. View Applications to My Project
+
+    /**
+     * Displays all applications submitted to the projects managed by the given manager.
+     *
+     * @param manager The manager viewing submitted applications.
+     */
     public void viewApplications(HDBManager manager) {
         // List applications to manager's projects
         List<BTOProject> projects = manager.getprojects();
@@ -288,7 +298,14 @@ public class HDBManagerControl {
         }
     }
 
-    // 10. Approve/Reject Application
+
+    /**
+     * Allows the manager to approve or reject pending BTO applications.
+     * Approval is based on flat availability, and approved applications
+     * will decrement the available flat count.
+     *
+     * @param manager The manager updating the application statuses.
+     */
     public void handleUpdateApplication(HDBManager manager) {
         // Approve/reject application based on flat supply
         // Update project flat counts
@@ -357,7 +374,13 @@ public class HDBManagerControl {
         }
     }
 
-    // 11. Process Withdrawal Requests
+
+    /**
+     * Processes withdrawal requests submitted by applicants for the manager's projects.
+     * The manager may approve or reject each request.
+     *
+     * @param manager The manager handling withdrawal requests.
+     */
     public void handleProcessWithdrawal(HDBManager manager) {
         // Show withdrawal requests for their projects
         // Allow manager to approve/reject
@@ -417,7 +440,11 @@ public class HDBManagerControl {
         }
     }
 
-    // 12. View All Enquiries (all projects)
+
+    /**
+     * Displays all enquiries submitted across all projects in the system,
+     * regardless of project ownership or visibility.
+     */
     public void viewAllEnquiries() {
         // Show enquiries across all projects
         System.out.println("=== List of All Enquiries ===");
@@ -428,7 +455,13 @@ public class HDBManagerControl {
         }
     }
 
-    // 13. Reply to Enquiries (My Project Only)
+
+    /**
+     * Allows the manager to reply to pending enquiries related to their own projects.
+     * Only unreplied enquiries can be selected and responded to.
+     *
+     * @param manager The manager replying to their project's enquiries.
+     */
     public void replyToEnquiries(HDBManager manager) {
         // Allow manager to reply only to enquiries on their own projects
         List<BTOProject> projects = manager.getprojects();
@@ -490,7 +523,13 @@ public class HDBManagerControl {
         manager.replyToEnquiry(selected, reply);
     }
 
-    // 14. Generate Report (with filters)
+
+    /**
+     * Generates and displays reports related to applicant bookings.
+     * The manager can choose to apply filters such as marital status or flat type.
+     *
+     * @param manager The manager generating and filtering reports.
+     */
     public void generateReports(HDBManager manager) {
         // Generate and display applicant reports (e.g. filter by marital status, flat type, etc.)
 
@@ -527,7 +566,12 @@ public class HDBManagerControl {
         manager.viewReport(choice);
     }
 
-    // 15. Change Password
+
+    /**
+     * Allows the manager to update their password by invoking the password utility.
+     *
+     * @param manager The manager whose password will be changed.
+     */
     public void changePassword(HDBManager manager) {
         PasswordChanger.updatePassword(manager);
     }

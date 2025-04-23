@@ -9,22 +9,48 @@ import java.util.Scanner;
 import model.*;
 import repo.*;
 
+/**
+ * Control class for handling all business logic specific to HDB Officers.
+ * Extends {@code ApplicantControl} to reuse common applicant functionality,
+ * while adding features related to project registration, enquiry management,
+ * and flat booking for officers.
+ */
 public class HDBOfficerControl extends ApplicantControl{
 
+    /** Repository containing all registered applicants. Used for cross-referencing and data access. */
     private ApplicantRepo applicantRepo;
+
+    /** Repository managing all BTO project data accessible to officers. */
     private BTOProjectRepo projectRepo;
+
+    /** Repository for managing officer-specific data and persistence. */
     private HDBOfficerRepo hdbOfficerRepo;
 
+    /** Scanner for reading user input in officer-specific workflows. */
     private final Scanner sc = new Scanner(System.in);
 
-    /** ENSURE TO CALL FROM MAIN */
+    /**
+     * Initializes the officer control with access to the applicant, project, and officer repositories.
+     * This method must be called from the main application before using any control functionality.
+     *
+     * @param aRepo       The applicant repository to be used.
+     * @param pRepo       The BTO project repository to be used.
+     * @param officerRepo The officer repository to be used.
+     */
     public void init(ApplicantRepo aRepo, BTOProjectRepo pRepo, HDBOfficerRepo officerRepo) {
         applicantRepo = aRepo;
         projectRepo = pRepo;
         hdbOfficerRepo = officerRepo;
     }
 
-    // 1. View Eligible Projects (as Applicant)
+
+    /**
+     * Displays a list of BTO projects the officer is eligible to apply for.
+     * Filters out projects the officer is already managing and only shows visible ones.
+     * Eligibility is based on marital status and age.
+     *
+     * @param officer The HDB officer viewing eligible projects.
+     */
     public void viewEligibleProjects(HDBOfficer officer) {
         List<BTOProject> allProjects = projectRepo.getProjects();
         boolean found = false;
@@ -65,7 +91,21 @@ public class HDBOfficerControl extends ApplicantControl{
         }        
     }
 
-    // 2. Apply for a Project (not handling)
+
+    /**
+     * Handles the process of allowing an HDB officer to apply for a BTO project,
+     * ensuring they do not apply to projects they are already managing and that
+     * they meet eligibility criteria based on age and marital status.
+     *
+     * Includes the following checks:
+     * - Officer has not already submitted a valid application
+     * - The selected project exists, is visible, and is currently active
+     * - Officer is not applying to a project they are managing
+     * - Officer meets age/marital requirements for flat types
+     * - Officer selects a valid flat type for application
+     *
+     * @param officer The HDB officer submitting the application.
+     */
     public void handleSubmitApplication(HDBOfficer officer) {
         // Allow officer to apply for a project they are not managing
         // Prevent re-application or application to project they registered for
@@ -136,7 +176,7 @@ public class HDBOfficerControl extends ApplicantControl{
 
         System.out.print("Enter your flat type choice (1 to " + eligibleTypes.size() + "): ");
         int choice = sc.nextInt();
-        sc.nextLine(); // consume newline
+        sc.nextLine();
 
         if (choice < 1 || choice > eligibleTypes.size()) {
             System.out.println("Invalid choice.");
@@ -160,9 +200,20 @@ public class HDBOfficerControl extends ApplicantControl{
     // ──────────────────────────────────────────────────────────────
     // avaliable in super class
 
-    // ──────────────────────────────────────────────────────────────
-    // 7. Register to Handle Project
-    // ──────────────────────────────────────────────────────────────
+
+    /**
+     * Handles the officer's registration to manage a BTO project.
+     *
+     * Performs several validations:
+     * - Officer is not already handling another project
+     * - Project exists
+     * - Officer has not applied to or already registered for the same project
+     * - No existing registration overlaps with the new project's application period
+     *
+     * If all checks pass, a new officer registration is submitted for approval.
+     *
+     * @param officer The HDB officer attempting to register for a project.
+     */
     public void handleSubmitRegistration(HDBOfficer officer) {
         // 1. Already handling a project?
         if (officer.isHandlingProject()) {
@@ -219,9 +270,13 @@ public class HDBOfficerControl extends ApplicantControl{
         System.out.println("Officer registration submitted successfully. Awaiting manager approval.");
     }
 
-    // ──────────────────────────────────────────────────────────────
-    // 8 - View the status of the registration 
-    // ──────────────────────────────────────────────────────────────
+
+    /**
+     * Displays the status of the officer's current registration, if one exists.
+     * Shows the project name, neighborhood, application period, and current approval status.
+     *
+     * @param officer The officer viewing their registration status.
+     */
     public void handleViewRegistrationStatus(HDBOfficer officer) {
         OfficerRegistration registration = officer.getRegistration();
 
@@ -239,9 +294,16 @@ public class HDBOfficerControl extends ApplicantControl{
         System.out.println("Current Status     : " + registration.getStatus());
     }
     
-    // ──────────────────────────────────────────────────────────────
-    // 9. View Project I’m Handling (even if not visible)
-    // ──────────────────────────────────────────────────────────────
+
+    /**
+     * Displays the full details of the project currently assigned to the officer.
+     * This includes name, neighborhood, application period, visibility,
+     * and available flat types with pricing.
+     *
+     * If the officer is not currently assigned to any project, a message is shown.
+     *
+     * @param officer The officer viewing the project they are managing.
+     */
     public void viewProjectHandling(HDBOfficer officer) {
         if (!officer.isHandlingProject()) {
             System.out.println("You are not currently handling any project.");
@@ -261,9 +323,15 @@ public class HDBOfficerControl extends ApplicantControl{
         System.out.println("===================================");
     }
 
-    // ──────────────────────────────────────────────────────────────
-    // 10. View/Reply to Enquiries (My Project Only)
-    // ──────────────────────────────────────────────────────────────
+
+    /**
+     * Displays all enquiries submitted for the project the officer is managing,
+     * and allows the officer to reply to one that hasn't been responded to yet.
+     *
+     * Validates officer assignment, enquiry selection, and reply input.
+     *
+     * @param officer The officer replying to enquiries.
+     */
     public void viewAndReplyEnquiries(HDBOfficer officer) {
         if (!officer.isHandlingProject()) {
             System.out.println("You are not assigned to any project.");
@@ -329,9 +397,15 @@ public class HDBOfficerControl extends ApplicantControl{
         officer.replyToEnquiry(selected, reply); // Handles logic and confirmation
     }
 
-    // ──────────────────────────────────────────────────────────────
-    // 11. Book Flat for Applicant
-    // ──────────────────────────────────────────────────────────────
+
+    /**
+     * Handles flat booking for an applicant, ensuring the officer is assigned to the
+     * same project the applicant applied for, and that the application status is successful.
+     *
+     * Also checks if flats are still available before proceeding with the booking.
+     *
+     * @param user The officer performing the flat booking.
+     */
     public void handleFlatBooking(HDBOfficer user) {
         if (!user.isHandlingProject()) {
             System.out.println("You are not currently assigned to any project.");
@@ -376,9 +450,15 @@ public class HDBOfficerControl extends ApplicantControl{
         user.bookFlat(applicant);  // call the alreadu existing method
     }
 
-    // ──────────────────────────────────────────────────────────────
-    // 12 - Generate Boooking Reciept
-    // ──────────────────────────────────────────────────────────────
+
+    /**
+     * Generates and displays a booking receipt for a successfully booked applicant.
+     *
+     * Validates that the officer is handling the relevant project and that
+     * the applicant has a booked application for that project.
+     *
+     * @param user The officer generating the receipt.
+     */
     public void generateBookingReceipt(HDBOfficer user) {
         if (!user.isHandlingProject()) {
             System.out.println("You are not currently assigned to any project.");
@@ -415,10 +495,16 @@ public class HDBOfficerControl extends ApplicantControl{
         user.generateBookingReceipt(applicant);
     }
 
-    // ──────────────────────────────────────────────────────────────
-    // 13. Update Password 
-    // ──────────────────────────────────────────────────────────────
-
+    /**
+     * Utility method to check if two date ranges overlap.
+     * Used to ensure no conflicting officer registrations across projects.
+     *
+     * @param start1 Start date of the first range.
+     * @param end1   End date of the first range.
+     * @param start2 Start date of the second range.
+     * @param end2   End date of the second range.
+     * @return True if the ranges overlap, false otherwise.
+     */
     private boolean datesOverlap(LocalDate start1, LocalDate end1, LocalDate start2, LocalDate end2) {
         return !(end1.isBefore(start2) || end2.isBefore(start1));
     }
