@@ -1,4 +1,3 @@
-// File: control/ApplicantControl.java
 package control;
 
 import enums.*;
